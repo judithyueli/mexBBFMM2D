@@ -8,3 +8,4 @@ src6 = '../src/write_Into_Binary_File.cpp';
 eigenDIR = '../../../';
 fmmDIR = '../header/';
 mex('-O','gatewayfunction.cpp',src1,src2,src3,src4,src5,src6,'-largeArrayDims',['-I' eigenDIR],['-I' fmmDIR])
+clear src1 src2 src3 src4 src5 src6 eigenDIR fmmDIR

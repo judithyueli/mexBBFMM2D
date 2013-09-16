@@ -23,6 +23,16 @@ using namespace std;
 double pi 	=	4.0*atan(1);
 extern void _main();
 
+/*! Define user's own kernel */
+class myKernel: public kernel_Base {
+public:
+    virtual double kernel_Func(Point r0, Point r1){
+        //implement your own kernel here
+        double rSquare  =   (r0.x-r1.x)*(r0.x-r1.x) + (r0.y-r1.y)*(r0.y-r1.y);
+        return exp(-pow(pow(rSquare,0.5)/900.0,0.5));
+    }
+};
+
 // Compute kernel value
 void kernel_2D(const unsigned long M, double *x1, const unsigned long N, double *x2, double *Q, const mxArray *kernel){
     // prepare for mexCallMATLAB: val = feval(@fh, rSquare)
@@ -51,14 +61,15 @@ void kernel_2D(const unsigned long M, double *x1, const unsigned long N, double 
     mxDestroyArray(rhs[1]);
 }
 
-void ckernel_2D(const unsigned long M, double *x1, const unsigned long N, double *x2, double *Q){
+void ckernel_2D(const unsigned long M, double *x1, const unsigned long N, double *x2, Map<MatrixXd> Q){
 //     compute Q in C++
     double rSquare;
     clock_t start = clock();
     for( int i=0; i<M; ++i){
         for(int j=0; j<N; ++j){
             rSquare = (x1[i]-x2[j])*(x1[i]-x2[j]);
-            Q[j + N*i] = rSquare*rSquare;
+            // Q[j + N*i] = rSquare*rSquare;
+            Q(i,j) = rSquare*rSquare;
         }
     }
     clock_t end = clock();
@@ -76,7 +87,7 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 
     double *x1, *x2;
 //    int m, n;
-    double *Qp;
+//    double *Qp;
     unsigned long N;
 //    vector<Point> location;
     unsigned long m;
@@ -109,14 +120,37 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     m = mxGetN(H_IN); // get the second dimension of H
     x1 = mxGetPr(x_IN);
     x2 = mxGetPr(y_IN);
-    cout << x1[N-1] << " " << x2[m-1] <<endl;
-    
+    cout << x1[N-1] << " " << x2[m-1] <<endl;   
+
+
     // Output Argument
 //    Q_OUT = mxCreateDoubleScalar(*mxGetPr(lhs));
-     Q_OUT = mxCreateDoubleMatrix(N,N, mxREAL); // Create the output matrix
-    Qp = mxGetPr(Q_OUT);
-    kernel_2D(N,x1,N,x2,Qp,kernel);
-    ckernel_2D(N,x1,N,x2,Qp);
+    // Q_OUT = mxCreateDoubleMatrix(N,N, mxREAL); // Create the output matrix
+    // double *Qp = mxGetPr(Q_OUT);
+    
+    
+    // compute exact matrix vector product
+    // myKernel A;
+    //MatrixXd Q;
+    //Q = MatrixXd::Zero(N,N);
+    // ckernel_2D(N,x1,N,x2,Q);
+    // Create an uninitialized numeric array for dynamic memory allocation
+    Q_OUT = mxCreateNumericMatrix(0, 0, mxDOUBLE_CLASS, mxREAL);
+    // Create a local double array
+    double *Qp;
+    Qp = (double *) mxMalloc(N * N * sizeof(double));  // +1 is nessessary?
+    // Load data to local array using Eigen <Map>
+    Map<MatrixXd> Q(Qp,N,N);
+    ckernel_2D(N,x1,N,x2,Q);
+    cout << Q(1,1) << endl;
+    // Put the C array into the mxArray and define its dimension
+    mxSetPr(Q_OUT,Qp);
+    mxSetM(Q_OUT,N);
+    mxSetN(Q_OUT,N);
+    // Q_OUT = Q.data();
+
+//    kernel_2D(N,x1,N,x2,Qp,kernel);
+//   ckernel_2D(N,x1,N,x2,Qp);
     
     // Read Binary file
     unsigned long P;
