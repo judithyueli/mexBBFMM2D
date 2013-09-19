@@ -16,22 +16,22 @@
 #include "environment.hpp"
 #include "BBFMM2D.hpp"
 #include <Eigen/Core>
-// include source file
+#include "kernelfun.hpp"
 
 using namespace Eigen;
 using namespace std;
 double pi 	=	4.0*atan(1);
 extern void _main();
 
-/*! Define user's own kernel */
-class myKernel: public kernel_Base {
-public:
-    virtual double kernel_Func(Point r0, Point r1){
-        //implement your own kernel here
-        double rSquare  =   (r0.x-r1.x)*(r0.x-r1.x) + (r0.y-r1.y)*(r0.y-r1.y);
-        return exp(-pow(pow(rSquare,0.5)/900.0,0.5));
-    }
-};
+///*! Define user's own kernel */
+//class myKernel: public kernel_Base {
+//public:
+//    virtual double kernel_Func(Point r0, Point r1){
+//        //implement your own kernel here
+//        double rSquare  =   (r0.x-r1.x)*(r0.x-r1.x) + (r0.y-r1.y)*(r0.y-r1.y);
+//        return exp(-pow(pow(rSquare,0.5)/900.0,0.5));
+//    }
+//};
 
 // Pass location from matlab to C
 void read_location(const mxArray* x, const mxArray* y, vector<Point>& location){
@@ -91,8 +91,7 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     double *charges;
     charges = mxGetPr(H_IN);
     // Load data to local array using Eigen <Map>
-    MatrixXd H = Map<MatrixXd>(charges, N, m);
-    // Map<MatrixXd> H(charges,N,m);
+    MatrixXd H = Map<MatrixXd>(charges, N, m); // Map<MatrixXd> H(charges,N,m);
 
     // Compute Fast matrix vector product
     // 1. Build Tree
@@ -104,9 +103,10 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     double FMMTotalTimeBuild = double(endBuild-startBuild)/double(CLOCKS_PER_SEC);
     cout << endl << "Total time taken for FMM(build tree) is:" << FMMTotalTimeBuild <<endl;
 
-    // Calculateing potential
+    // 2.Calculateing potential
     clock_t startA = clock();
-    QH_OUT = mxCreateNumericMatrix(0, 0, mxDOUBLE_CLASS, mxREAL);     // Create an uninitialized numeric array for dynamic memory allocation
+    // Create an uninitialized numeric array for dynamic memory allocation
+    QH_OUT = mxCreateNumericMatrix(0, 0, mxDOUBLE_CLASS, mxREAL);     
     double *QHp;
     QHp = (double *) mxMalloc(N * m * sizeof(double));
     myKernel A;
@@ -138,6 +138,7 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     double exactComputingTime = double(end-start)/double(CLOCKS_PER_SEC);
 
     cout << "the total computation time is " << exactAssemblyTime + exactComputingTime <<endl;
+    
     // Put the C array into the mxArray and define its dimension
     mxSetPr(Q_OUT,Qp); // Qp must be initialiezed using mxMalloc
     mxSetM(Q_OUT,N);
