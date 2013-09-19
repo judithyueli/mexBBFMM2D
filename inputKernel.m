@@ -1,9 +1,7 @@
 % This file allow user to write a new kernel into the kernelfun.hpp using
 % matlab function handle
 
-% Kernel 
-syms rSquare;
-kernel = exp(-sqrt(rSquare)/2); % user input here
+
 ckernel = ccode(kernel);
 kernelLineNumber = 7;
 

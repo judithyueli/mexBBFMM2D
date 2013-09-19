@@ -40,21 +40,22 @@ void read_location(const mxArray* x, const mxArray* y, vector<Point>& location){
 
 void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     // Macros for the output and input arguments
-    #define QHexact_OUT     plhs[0]
-    #define QH_OUT          plhs[1]
-    #define x_IN            prhs[0]
-    #define y_IN            prhs[1]
-    #define H_IN            prhs[2]
-    #define nCheb_IN        prhs[3]
+    #define Q_OUT           plhs[0]
+    #define QHexact_OUT     plhs[1]
+    #define QH_OUT          plhs[2]
+    #define kernel          prhs[0]
+    #define x_IN            prhs[1]
+    #define y_IN            prhs[2]
+    #define H_IN            prhs[3]
 
     unsigned long N;
     unsigned m;
     
     // Argument Checking:
-// //   // First Argument should be a Function Handle
-//     if( !mxIsClass( kernel , "function_handle")) {
-//         mexErrMsgTxt("First input argument is not a function handle.");
-//     }
+//   // First Argument should be a Function Handle
+    if( !mxIsClass( kernel , "function_handle")) {
+        mexErrMsgTxt("First input argument is not a function handle.");
+    }
     
 //   // Second Argument is a Double Scalar
 //   if (!mxIsClass(prhs[1], "double")||(mxGetM(prhs[1])>1)||(mxGetN(prhs[1])>1)) {
@@ -75,8 +76,6 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     //processing on input arguments
     N = mxGetM(H_IN); // get the first dimension of H
     m = mxGetN(H_IN); // get the second dimension of H
-    unsigned short nChebNodes = *mxGetPr(nCheb_IN);
-    cout << nChebNodes << endl;
     vector<Point> location;
     read_location(x_IN,y_IN,location);
     double *charges;
@@ -87,6 +86,7 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     // Compute Fast matrix vector product
     // 1. Build Tree
     clock_t startBuild  = clock();
+    unsigned short nChebNodes = 5;
     H2_2D_Tree Atree(nChebNodes, charges, location, N, m); //Build the fmm tree
     clock_t endBuild = clock();
 
@@ -104,17 +104,16 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     clock_t endA = clock();
     double FMMTotalTimeA = double(endA-startA)/double(CLOCKS_PER_SEC);
     cout << endl << "Total time taken for FMM(calculating potential) is:" << FMMTotalTimeA <<endl;
-    MatrixXd QHfast = Map<MatrixXd>(QHp, N, m);
 
-    // if #argin == 2
-    /*///////////////////////////////
-    // Compute exact covariance Q //
-    ///////////////////////////////*/
-
+    // Compute exact covariance Q
     cout << endl << "Starting Exact computation..." << endl;
     clock_t start = clock();
-    MatrixXd Q;
-    A.kernel_2D(N, location, N, location, Q);// Q is initialized inside function A.kernel_2D
+    Q_OUT = mxCreateNumericMatrix(0, 0, mxDOUBLE_CLASS, mxREAL);
+    double *Qp;
+    Qp = (double *) mxMalloc(N*N*sizeof(double));
+    MatrixXd Q = Map<MatrixXd>(Qp, N, N);
+    A.kernel_2D(N, location, N, location, Q);
+    cout << Q(4,4) <<endl;
     // ckernel_2D(N,location,N,location,Q);
     clock_t end = clock();
     double exactAssemblyTime = double(end-start)/double(CLOCKS_PER_SEC);
@@ -131,12 +130,6 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 
     cout << "the total computation time is " << exactAssemblyTime + exactComputingTime <<endl;
     
-    // Compute the difference
-    MatrixXd error = QHfast - QHT;
-    double absoluteError = error.norm();
-    double relativeError = absoluteError/QHT.norm();
-    cout << "the relative difference is:" << relativeError <<endl;
-
     // Put the C array into the mxArray and define its dimension
     mxSetPr(QHexact_OUT,QHexactp);
     mxSetM(QHexact_OUT,N);
