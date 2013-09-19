@@ -1,13 +1,3 @@
-// A simplefunction.cpp that takes 3 arguments
-// 1) A function handle  (kernel of Q)
-// 2) An integer value M (dimension of Q)
-// 3) An integer value N (number of columns of H)
-// 4) A matrix U of size MxN
-// 5) A vector of location x of Mx1
-// 6) A vector of location y of Nx1
-// and returns the output of the product QU
-// Usage:
-//mex('-largeArrayDims','-I/Users/yueli/Dropbox/Matlab/FastKF/Final_code/mexFMM/eigen','gatewayfunction.cpp')
 
 #include <iostream>
 #include "math.h"
@@ -22,6 +12,9 @@ using namespace Eigen;
 using namespace std;
 double pi 	=	4.0*atan(1);
 extern void _main();
+
+#define IS_REAL_2D_FULL_DOUBLE(P) (!mxIsComplex(P) && mxGetNumberOfDimensions(P) == 2 && !mxIsSparse(P) && mxIsDouble(P))
+#define IS_REAL_SCALAR(P) (IS_REAL_2D_FULL_DOUBLE(P) && mxGetNumberOfElements(P) == 1)
 
 // Pass location from matlab to C
 void read_location(const mxArray* x, const mxArray* y, vector<Point>& location){
@@ -40,8 +33,8 @@ void read_location(const mxArray* x, const mxArray* y, vector<Point>& location){
 
 void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     // Macros for the output and input arguments
-    #define QHexact_OUT     plhs[0]
-    #define QH_OUT          plhs[1]
+    #define QH_OUT          plhs[0]
+    #define QHexact_OUT     plhs[1]
     #define x_IN            prhs[0]
     #define y_IN            prhs[1]
     #define H_IN            prhs[2]
@@ -61,22 +54,33 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 //     mexErrMsgTxt("Second input argument is not a double scalar.");
 //   }
     // First and Second Argument are integer
-    
-    if( !mxIsDouble(x_IN)) {
+    // Check number of argument
+    if(nrhs != 4) {
+        mexErrMsgTxt("Wrong number of input arguments");
+    }else if(nlhs > 2){
+        mexErrMsgTxt("Too many output arguments");
+    }
+
+    if( !IS_REAL_2D_FULL_DOUBLE(x_IN)) {
         mexErrMsgTxt("Third input argument is not a real 2D full double array.");
     }
-    if( !mxIsDouble(y_IN)) {
+    if( !IS_REAL_2D_FULL_DOUBLE(y_IN)) {
         mexErrMsgTxt("Third input argument is not a real 2D full double array.");
     }
-    if( !mxIsDouble(H_IN)) {
+    if( !IS_REAL_2D_FULL_DOUBLE(H_IN)) {
         mexErrMsgTxt("Third input argument is not a real 2D full double array.");
+    }
+    if( !IS_REAL_SCALAR(nCheb_IN)){
+        mexErrMsgTxt("nChebnotes must be a real double scalar");
+    }
+    if( mxGetM(x_IN)!= mxGetM(y_IN) || mxGetM(x_IN) != mxGetM(H_IN)){
+        mexErrMsgTxt("The dimension of the input matrices is wrong");
     }
     
     //processing on input arguments
     N = mxGetM(H_IN); // get the first dimension of H
     m = mxGetN(H_IN); // get the second dimension of H
     unsigned short nChebNodes = *mxGetPr(nCheb_IN);
-    cout << nChebNodes << endl;
     vector<Point> location;
     read_location(x_IN,y_IN,location);
     double *charges;
@@ -106,11 +110,16 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     cout << endl << "Total time taken for FMM(calculating potential) is:" << FMMTotalTimeA <<endl;
     MatrixXd QHfast = Map<MatrixXd>(QHp, N, m);
 
-    // if #argin == 2
+    // Put the C array into the mxArray and define its dimension
+    mxSetPr(QH_OUT,QHp);
+    mxSetM(QH_OUT,N);
+    mxSetN(QH_OUT,m);
+
     /*///////////////////////////////
     // Compute exact covariance Q //
     ///////////////////////////////*/
 
+    if(nlhs == 2){
     cout << endl << "Starting Exact computation..." << endl;
     clock_t start = clock();
     MatrixXd Q;
@@ -137,13 +146,11 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     double relativeError = absoluteError/QHT.norm();
     cout << "the relative difference is:" << relativeError <<endl;
 
-    // Put the C array into the mxArray and define its dimension
+    // Output
     mxSetPr(QHexact_OUT,QHexactp);
     mxSetM(QHexact_OUT,N);
     mxSetN(QHexact_OUT,m);
-    mxSetPr(QH_OUT,QHp);
-    mxSetM(QH_OUT,N);
-    mxSetN(QH_OUT,m);
+    } 
 
     return;
 }
