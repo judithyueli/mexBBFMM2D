@@ -10,7 +10,7 @@
 
 using namespace Eigen;
 using namespace std;
-double pi 	=	4.0*atan(1);
+double pi 	=	4.0*atan(1.0);
 extern void _main();
 
 #define IS_REAL_2D_FULL_DOUBLE(P) (!mxIsComplex(P) && mxGetNumberOfDimensions(P) == 2 && !mxIsSparse(P) && mxIsDouble(P))
@@ -44,16 +44,7 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     unsigned m;
     
     // Argument Checking:
-// //   // First Argument should be a Function Handle
-//     if( !mxIsClass( kernel , "function_handle")) {
-//         mexErrMsgTxt("First input argument is not a function handle.");
-//     }
-    
-//   // Second Argument is a Double Scalar
-//   if (!mxIsClass(prhs[1], "double")||(mxGetM(prhs[1])>1)||(mxGetN(prhs[1])>1)) {
-//     mexErrMsgTxt("Second input argument is not a double scalar.");
-//   }
-    // First and Second Argument are integer
+
     // Check number of argument
     if(nrhs != 4) {
         mexErrMsgTxt("Wrong number of input arguments");
