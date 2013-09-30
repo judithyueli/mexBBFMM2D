@@ -7,30 +7,40 @@ matrix of size NxN with a kernel, and N is the number of unknown values at point
 H is a N x m matrix with N >> m. 
 The kernel is a decaying function of the seperation between two points and takes value from [0,1].  
 
+###STEP 1: Setup MEX
+
 This package relies on MATLAB MEX functions. In order to use MEX functions, you should setup mex correctly.
 
-1. Select a C compiler for the MATLAB version and the operation systems installed on your computer. For a list of MATLAB supported compiler, visit [here](http://www.mathworks.com/support/sysreq/previous_releases.html)
+- Select a C compiler for the MATLAB version and the operation systems installed on your computer. For a list of MATLAB supported compiler, visit [here](http://www.mathworks.com/support/sysreq/previous_releases.html)
 
-2. Setup MEX by typing the following MATLAB command
+- Setup MEX by typing the following MATLAB command
+
 ```
       mex -setup 
 ```
 
-3. To ensure you have MEX installed appropriately, try an example provided by MATLAB:
+- To ensure you have MEX installed appropriately, try an example provided by MATLAB:
 
 ```
-	cd(fullfile(matlabroot, 'extern', 'examples', 'mex'))
-	mex -v yprime.c
+	copyfile([matlabroot,'/extern/examples/mex/arraySize.c'],'./','f')
+	mex -v arraySize.c
+	arraySize(5000)
+```
+You would be able to see the size of a 5000 x 5000 matrix.
+
+###STEP2: Try the example problem given by mexBBFMM2D
+
+- Download the package from this link.
+
+- Go to the folder containing `mexFMM2D.cpp`, and type Matlab command  
+
+```
+      callmxFMM2D
 ```
 
-You would be able to see yprime.mex in your local folder, then you can call yprime
-+ Go to BBFMM2D/, and type Matlab command  
+The output `QHexact` will be the exact product of a 10000 x 10000 covariance matrix `Q` with kernel \\(exp(-\dfrac{\sqrt{h}}{30})\\) and a 10000x100 matrix `H`. `QH` will be the product computed using BBFMM2D package.  
 
-```
-      callmxFMM2D.m
-```
-
-To compile the code yourself:
+### Step 3: Use mexBBFMM2D for your own research problem:
 
 1.Go to the folder _mexBBFMM2D/_
 ```
@@ -52,8 +62,11 @@ code into your matlab script
 ```
 3.For a new kernel type, repeat step 1 to 2. Otherwise no need to recompile the code. 
 
-This package uses:
+#### This package uses:
 
 1. [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page)
 
 2. [BBFMM2D](https://github.com/sivaramambikasaran/BBFMM2D)
+
+<script type="text/javascript"
+   src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
