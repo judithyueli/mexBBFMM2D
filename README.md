@@ -1,27 +1,29 @@
 mexBBFMM2D
 ==========
 
-This is the Matlab MEX gateway files to the package BBFMM2D (https://github.com/sivaramambikasaran/BBFMM2D).
+This is the Matlab MEX gateway files to the package [BBFMM2D](https://github.com/sivaramambikasaran/BBFMM2D).
 BBFMM2D provides a *O(NlogN)* solution to compute matrix-matrix product Q*H, where Q is a covariance 
 matrix of size NxN with a kernel, and N is the number of unknown values at points (x,y) in a 2D domain. 
 H is a N x m matrix with N >> m. 
 The kernel is a decaying function of the seperation between two points and takes value from [0,1].  
 
-Setup mex on your computer by typing in Matlab  
+This package relies on MATLAB MEX functions. In order to use MEX functions, you should setup mex correctly.
 
+1. Select a C compiler for the MATLAB version and the operation systems installed on your computer. For a list of MATLAB supported compiler, visit [here](http://www.mathworks.com/support/sysreq/previous_releases.html)
+
+2. Setup MEX by typing the following MATLAB command
 ```
       mex -setup 
 ```
-More details can be found in (http://www.mathworks.com/help/matlab/matlab_external/building-mex-files.html#brnq88l-1)
-For Mac users who find troubles with mex setup, a helpful link is
-http://www.mathworks.com/support/solutions/en/data/1-FR6LXJ/
 
-Setup:
-+ Download [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page)
-+ Download [BBFMM2D](https://github.com/sivaramambikasaran/BBFMM2D), and put it under _eigen/Codes_
-+ Download [mexBBFMM2D](https://github.com/whereisdodo/mexBBFMM2D), and put it under _BBFMM2D/_
+3. To ensure you have MEX installed appropriately, try an example provided by MATLAB:
 
-Try an example:
+```
+	cd(fullfile(matlabroot, 'extern', 'examples', 'mex'))
+	mex -v yprime.c
+```
+
+You would be able to see yprime.mex in your local folder, then you can call yprime
 + Go to BBFMM2D/, and type Matlab command  
 
 ```
@@ -49,3 +51,9 @@ code into your matlab script
       [QH,QHexact] = mexBBFMM2D(xloc,yloc,H,nCheb);
 ```
 3.For a new kernel type, repeat step 1 to 2. Otherwise no need to recompile the code. 
+
+This package uses:
+
+1. [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page)
+
+2. [BBFMM2D](https://github.com/sivaramambikasaran/BBFMM2D)
