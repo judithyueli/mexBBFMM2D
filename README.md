@@ -46,19 +46,19 @@ The output `QHexact` will be the exact product of a 10000 x 10000 covariance mat
 ```
       syms r
       kernel = exp(-r/30);
-      make(r,kernel)
+      make(r,kernel,'expfun')
 ```
-2.You should find _mexBBFMM2D.mex_ in your folder, now if you want to compute a matrix-matrix product Q*H, add the following 
+2.You should find _expfun.mex_ in your folder, now if you want to compute a matrix-matrix product Q*H, add the following 
 code into your matlab script  
 
 ```
       addpath(Directory to mexBBFMM2D);
-      QH = mexBBFMM2D(xloc,yloc,H,nCheb); 
+      QH = expfun(xloc,yloc,H,nCheb); 
       
 ```
   Or if you want to compare the result with exact product QHexact for smaller case to determine the least number of chebyshev nodes needed. Large nCheb will give greater accuracy but more time consuming.
 ```
-      [QH,QHexact] = mexBBFMM2D(xloc,yloc,H,nCheb);
+      [QH,QHexact] = expfun(xloc,yloc,H,nCheb);
 ```
 3.For a new kernel type, repeat step 1 to 2. Otherwise no need to recompile the code. 
 
