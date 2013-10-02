@@ -38,7 +38,7 @@ You would be able to see the size of a 5000 x 5000 matrix.
       callmxFMM2D
 ```
 
-The output `QHexact` will be the exact product of a 10000 x 10000 covariance matrix `Q` with kernel \\(exp(-\dfrac{\sqrt{h}}{30})\\) and a 10000x100 matrix `H`. `QH` will be the product computed using BBFMM2D package.  
+The output `QHexact` will be the exact product of a 10000 x 10000 covariance matrix `Q` with kernel $$(exp(-\dfrac{\sqrt{h}}{30})$$ and a 10000x100 matrix `H`. `QH` will be the product computed using BBFMM2D package.  
 
 ### Step 3: Use mexBBFMM2D for your own research problem:
 
@@ -56,7 +56,7 @@ code into your matlab script
       QH = expfun(xloc,yloc,H,nCheb); 
       
 ```
-  Or if you want to compare the result with exact product QHexact for smaller case to determine the least number of chebyshev nodes needed. Large nCheb will give greater accuracy but more time consuming.
+  Or if you want to compare the result with exact product QHexact for smaller case to determine the least number of chebyshev nodes needed. Large `nCheb` will give greater accuracy but more time consuming.
 ```
       [QH,QHexact] = expfun(xloc,yloc,H,nCheb);
 ```
