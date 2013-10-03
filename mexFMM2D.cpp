@@ -1,3 +1,8 @@
+/*
+The MATLAB gateway function to BBFMM2D developed by Sivaram.
+The code provides a O(N) solution to a kernel matrix-vector product.
+Written by Judith Yue Li 10/02/2013
+*/
 
 #include <iostream>
 #include "math.h"
@@ -78,7 +83,7 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     charges = mxGetPr(H_IN);
     // Load data to local array using Eigen <Map>
     MatrixXd H = Map<MatrixXd>(charges, N, m); // Map<MatrixXd> H(charges,N,m);
-
+    
     // Compute Fast matrix vector product
     // 1. Build Tree
     clock_t startBuild  = clock();
@@ -86,61 +91,52 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     clock_t endBuild = clock();
 
     double FMMTotalTimeBuild = double(endBuild-startBuild)/double(CLOCKS_PER_SEC);
-    cout << endl << "Total time taken for FMM(build tree) is:" << FMMTotalTimeBuild <<endl;
-
+    mexPrintf("\nTotal time taken for FMM(build tree) is: %.4g\n",FMMTotalTimeBuild);    
+    
     // 2.Calculateing potential
     clock_t startA = clock();
-    // Create an uninitialized numeric array for dynamic memory allocation
-    QH_OUT = mxCreateNumericMatrix(0, 0, mxDOUBLE_CLASS, mxREAL);     
+    // Create the output matrix
+    QH_OUT = mxCreateDoubleMatrix(N, m, mxREAL);     
+    // Get a pointer to the real data in the output matrix
     double *QHp;
-    QHp = (double *) mxMalloc(N * m * sizeof(double));
+    QHp = mxGetPr(QH_OUT);
     myKernel A;
     A.calculate_Potential(Atree, QHp);
     clock_t endA = clock();
     double FMMTotalTimeA = double(endA-startA)/double(CLOCKS_PER_SEC);
-    cout << endl << "Total time taken for FMM(calculating potential) is:" << FMMTotalTimeA <<endl;
-    MatrixXd QHfast = Map<MatrixXd>(QHp, N, m);
-
-    // Put the C array into the mxArray and define its dimension
-    mxSetPr(QH_OUT,QHp);
-    mxSetM(QH_OUT,N);
-    mxSetN(QH_OUT,m);
+    mexPrintf("\nTotal time taken for FMM(calculating potential) is: %.4g\n",FMMTotalTimeA);
 
     /*///////////////////////////////
     // Compute exact covariance Q //
     ///////////////////////////////*/
 
     if(nlhs == 2){
-    cout << endl << "Starting Exact computation..." << endl;
+    mexPrintf("\n Starting exact computation...\n");
     clock_t start = clock();
     MatrixXd Q;
     A.kernel_2D(N, location, N, location, Q);// Q is initialized inside function A.kernel_2D
-    // ckernel_2D(N,location,N,location,Q);
     clock_t end = clock();
     double exactAssemblyTime = double(end-start)/double(CLOCKS_PER_SEC);
     
     // Compute exact Matrix vector product
     start = clock();
-    QHexact_OUT = mxCreateNumericMatrix(0, 0, mxDOUBLE_CLASS, mxREAL);
+    QHexact_OUT = mxCreateDoubleMatrix(N, m, mxREAL);
     double *QHexactp;
-    QHexactp = (double *) mxMalloc(N * m * sizeof(double));
+    QHexactp = mxGetPr(QHexact_OUT);
     Map<MatrixXd> QHT(QHexactp,N,m);
     QHT = Q*H;
     end = clock();
     double exactComputingTime = double(end-start)/double(CLOCKS_PER_SEC);
 
-    cout << "the total computation time is " << exactAssemblyTime + exactComputingTime <<endl;
-    
+    mexPrintf("\nthe total computation time is: %.4g\n",exactAssemblyTime + exactComputingTime);
+        
     // Compute the difference
+    MatrixXd QHfast = Map<MatrixXd>(QHp, N, m);
     MatrixXd error = QHfast - QHT;
     double absoluteError = error.norm();
     double relativeError = absoluteError/QHT.norm();
-    cout << "the relative difference is:" << relativeError <<endl;
-
-    // Output
-    mxSetPr(QHexact_OUT,QHexactp);
-    mxSetM(QHexact_OUT,N);
-    mxSetN(QHexact_OUT,m);
+    mexPrintf("the relative difference is: %13.6E \n", relativeError);
+    
     } 
 
     return;

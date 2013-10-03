@@ -38,30 +38,58 @@ You would be able to see the size of a 5000 x 5000 matrix.
       callmxFMM2D
 ```
 
-The output `QHexact` will be the exact product of a 10000 x 10000 covariance matrix `Q` with kernel $$(exp(-\dfrac{\sqrt{h}}{30})$$ and a 10000x100 matrix `H`. `QH` will be the product computed using BBFMM2D package.  
+The output `QHexact` is the exact product of a 10000 x 10000 covariance matrix `Q` with kernel ![equation](http://latex.codecogs.com/gif.download?Q%28h%29%20%3D%20%5Cexp%28-%5Cdfrac%7B%5Csqrt%7Bh%7D%7D%7B30%7D%29) and a 10000 x 100 matrix `H`. And `QH` is the product computed using BBFMM2D package. The relative difference of `QH` and `QHexact` is __3.2E-10__. The table below shows computation time on a single core CPU.
+
+|   N      |  Time in seconds  |     
+| -------: |:-----------------:|   
+| 10,000   |                2.6|
+| 100,000  |               27.3|  
+| 1000,000 |              242.5|   
 
 ### Step 3: Use mexBBFMM2D for your own research problem:
 
-1.Go to the folder _mexBBFMM2D/_
+1.Compile: Go to the folder __mexBBFMM2D/__ 
 ```
-      syms r
-      kernel = exp(-r/30);
-      make(r,kernel,'expfun')
+      syms r                     % r is seperation 
+      kernel = exp(-r/30);       % specify kernel type
+      make(r,kernel,'expfun')    % compile and generate the mex file with name 'expfun'
 ```
-2.You should find _expfun.mex_ in your folder, now if you want to compute a matrix-matrix product Q*H, add the following 
-code into your matlab script  
+
+2.You should find __expfun.mex__ in your folder, now if you want to compute a matrix-matrix product Q*H, add the following code into your matlab script  
 
 ```
-      addpath(Directory to mexBBFMM2D);
-      QH = expfun(xloc,yloc,H,nCheb); 
-      
+      addpath(Directory to expfun.mex);
+      clear QH;                           % Clear memory associated with output
+      QH = expfun(xloc,yloc,H,nCheb);       
 ```
-  Or if you want to compare the result with exact product QHexact for smaller case to determine the least number of chebyshev nodes needed. Large `nCheb` will give greater accuracy but more time consuming.
+  Or if you want to compare the result with exact product QHexact for smaller case to determine the least number of chebyshev nodes `nCheb` needed. Large `nCheb` will give greater accuracy but more time consuming. `nCheb` should be greater than 3.
 ```
       [QH,QHexact] = expfun(xloc,yloc,H,nCheb);
 ```
-3.For a new kernel type, repeat step 1 to 2. Otherwise no need to recompile the code. 
 
+3.For a new kernel type, repeat step 1 to 2. Otherwise step 1 can be skipped. 
+
+#### Example of kernel type:
++ Gaussian kernel 
+
+      ![guasskernel](http://latex.codecogs.com/gif.download?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Csigma%5E2%20%5Cexp%28-%5Cdfrac%7Br%5E2%7D%7BL%5E2%7D%29)
+
++ Exponential kernel
+
+      ![expkernel](http://latex.codecogs.com/gif.download?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Cexp%28-%5Cdfrac%7Br%7D%7BL%7D%29)
+
++ Logrithm kernel
+
+      ![logkernel](http://latex.codecogs.com/gif.download?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20A%20%5Clog%28r%29%2C%20A%3E0)
+
++ Linear kernel
+
+      ![linearkernel](http://latex.codecogs.com/gif.download?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Ctheta%20r%2C%20%5Ctheta%20%3E0)
+
++ Power kernel
+
+      ![powerkernel](http://latex.codecogs.com/gif.download?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Ctheta%20r%5Es%2C%20%5Ctheta%20%3E0%2C%200%20%3Cs%20%3C2)
+      
 #### This package uses:
 
 1. [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page)

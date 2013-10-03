@@ -4,8 +4,8 @@ kernel = exp(-sqrt(r^0.5)/30);  % user input here, kernel has to be a symbolic f
 outputfile = 'expfun';
 make(r,kernel,outputfile);
 
-%% Run Example of Q*H
-clear all                       % QH and QHexact must be freed before start
+%% Example: Q*H
+
 % Info on dimensions
 Nx =100; Ny = 100; N = Nx*Ny;
 
@@ -19,6 +19,9 @@ xloc = xloc(:);  yloc = yloc(:);
 % The right muliplier H, each column is a Nx1 vector 
 H = ones(N,100); nCheb = 6;
 
-% Call different file
+% Clear memory associated with output
+clear QH QHexact
+
+% Compute matrix-matrix product QH of dimension 10000x100
 [QH,QHexact] = expfun(xloc, yloc,H,nCheb);
 
