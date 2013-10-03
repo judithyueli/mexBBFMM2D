@@ -75,11 +75,10 @@ The output `QHexact` is the exact product of a 10000 x 10000 covariance matrix `
       make(r,kernel,'expfun')    % compile and generate the mex file with name 'expfun'
 ```
 
-2.You should find __expfun.mex__ in your folder, now if you want to compute a matrix-matrix product Q*H, add the following code into your matlab script  
+2.You should find __expfun.mex__ in your folder. Now if you want to compute a matrix-matrix product Q*H, move __expfun.mex__ to the desired directory you are working on. You can use it as an ordinary MATLAB function by including the following code to your script
 
 ```
-      addpath(Directory to expfun.mex);
-      clear QH;                           % Clear memory associated with output
+      clear QH;                           % Must clear memory associated with output
       QH = expfun(xloc,yloc,H,nCheb);       
 ```
   Or if you want to compare the result with exact product QHexact for smaller case to determine the least number of chebyshev nodes `nCheb` needed. Large `nCheb` will give greater accuracy but more time consuming. `nCheb` should be greater than 3.
