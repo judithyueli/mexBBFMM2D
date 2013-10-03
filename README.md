@@ -38,7 +38,7 @@ You would be able to see the size of a 5000 x 5000 matrix.
       callmxFMM2D
 ```
 
-The output `QHexact` is the exact product of a 10000 x 10000 covariance matrix `Q` with kernel ![equation](http://latex.codecogs.com/gif.download?Q%28h%29%20%3D%20%5Cexp%28-%5Cdfrac%7B%5Csqrt%7Bh%7D%7D%7B30%7D%29) and a 10000 x 100 matrix `H`. And `QH` is the product computed using BBFMM2D package. The relative difference of `QH` and `QHexact` is __3.2E-10__. The table below shows computation time on a single core CPU.
+The output `QHexact` is the exact product of a 10000 x 10000 covariance matrix `Q` with kernel ![equation](http://latex.codecogs.com/gif.latex?Q%28h%29%20%3D%20%5Cexp%28-%5Cdfrac%7B%5Csqrt%7Bh%7D%7D%7B30%7D%29) and a 10000 x 100 matrix `H`. And `QH` is the product computed using BBFMM2D package. The relative difference of `QH` and `QHexact` is __3.2E-10__. The table below shows computation time on a single core CPU.
 
 |   N      |  Time in seconds  |     
 | -------: |:-----------------:|   
@@ -72,23 +72,23 @@ The output `QHexact` is the exact product of a 10000 x 10000 covariance matrix `
 #### Example of kernel type:
 + Gaussian kernel 
 
-      ![guasskernel](http://latex.codecogs.com/gif.download?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Csigma%5E2%20%5Cexp%28-%5Cdfrac%7Br%5E2%7D%7BL%5E2%7D%29)
+      ![guasskernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Csigma%5E2%20%5Cexp%28-%5Cdfrac%7Br%5E2%7D%7BL%5E2%7D%29)
 
 + Exponential kernel
 
-      ![expkernel](http://latex.codecogs.com/gif.download?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Cexp%28-%5Cdfrac%7Br%7D%7BL%7D%29)
+      ![expkernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Cexp%28-%5Cdfrac%7Br%7D%7BL%7D%29)
 
 + Logrithm kernel
 
-      ![logkernel](http://latex.codecogs.com/gif.download?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20A%20%5Clog%28r%29%2C%20A%3E0)
+      ![logkernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20A%20%5Clog%28r%29%2C%20A%3E0)
 
 + Linear kernel
 
-      ![linearkernel](http://latex.codecogs.com/gif.download?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Ctheta%20r%2C%20%5Ctheta%20%3E0)
+      ![linearkernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Ctheta%20r%2C%20%5Ctheta%20%3E0)
 
 + Power kernel
 
-      ![powerkernel](http://latex.codecogs.com/gif.download?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Ctheta%20r%5Es%2C%20%5Ctheta%20%3E0%2C%200%20%3Cs%20%3C2)
+      ![powerkernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Ctheta%20r%5Es%2C%20%5Ctheta%20%3E0%2C%200%20%3Cs%20%3C2)
       
 #### This package uses:
 
