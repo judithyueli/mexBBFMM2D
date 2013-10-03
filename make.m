@@ -36,5 +36,5 @@ src4 = 'BBFMM2D/src/kernel_Types.cpp';
 eigenDIR = 'eigen/';
 fmmDIR = 'BBFMM2D/header/';
 mex('-O','mexFMM2D.cpp',src1,src2,src3,src4,'-largeArrayDims',['-I',eigenDIR],['-I',fmmDIR],'-output',filename)
-disp('mex compiling is successful! You can call mexFMM2D now')
+disp('mex compiling is successful!')
 end
