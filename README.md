@@ -2,10 +2,30 @@ mexBBFMM2D
 ==========
 
 This is the Matlab MEX gateway files to the package [BBFMM2D](https://github.com/sivaramambikasaran/BBFMM2D).
-BBFMM2D provides a __O(N)__ solution to compute matrix-matrix product Q*H, where Q is a covariance 
-matrix of size NxN with a kernel, and N is the number of unknown values at points (x,y) in a 2D domain. 
+BBFMM2D provides a __O(N)__ solution to compute matrix-matrix product Q*H, where Q is a kernel matrix of size N x N, and N is the number of unknown values at points (x,y) in a 2D domain. 
 H is a N x m matrix with N >> m. 
-The kernel is a decaying function of the seperation between two points and takes value from [0,1].  
+
+#### Example of kernel type:
++ Gaussian kernel 
+
+      ![guasskernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Csigma%5E2%20%5Cexp%28-%5Cdfrac%7Br%5E2%7D%7BL%5E2%7D%29)
+
++ Exponential kernel
+
+      ![expkernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Cexp%28-%5Cdfrac%7Br%7D%7BL%7D%29)
+
++ Logrithm kernel
+
+      ![logkernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20A%20%5Clog%28r%29%2C%20A%3E0)
+
++ Linear kernel
+
+      ![linearkernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Ctheta%20r%2C%20%5Ctheta%20%3E0)
+
++ Power kernel
+
+      ![powerkernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Ctheta%20r%5Es%2C%20%5Ctheta%20%3E0%2C%200%20%3Cs%20%3C2)
+        
 
 ###STEP 1: Setup MEX
 
@@ -69,27 +89,6 @@ The output `QHexact` is the exact product of a 10000 x 10000 covariance matrix `
 
 3.For a new kernel type, repeat step 1 to 2. Otherwise step 1 can be skipped. 
 
-#### Example of kernel type:
-+ Gaussian kernel 
-
-      ![guasskernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Csigma%5E2%20%5Cexp%28-%5Cdfrac%7Br%5E2%7D%7BL%5E2%7D%29)
-
-+ Exponential kernel
-
-      ![expkernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Cexp%28-%5Cdfrac%7Br%7D%7BL%7D%29)
-
-+ Logrithm kernel
-
-      ![logkernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20A%20%5Clog%28r%29%2C%20A%3E0)
-
-+ Linear kernel
-
-      ![linearkernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Ctheta%20r%2C%20%5Ctheta%20%3E0)
-
-+ Power kernel
-
-      ![powerkernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Ctheta%20r%5Es%2C%20%5Ctheta%20%3E0%2C%200%20%3Cs%20%3C2)
-      
 #### This package uses:
 
 1. [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page)
