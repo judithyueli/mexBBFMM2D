@@ -2,7 +2,7 @@ mexBBFMM2D
 ==========
 
 This is the Matlab MEX gateway files to the package [BBFMM2D](https://github.com/sivaramambikasaran/BBFMM2D).
-BBFMM2D provides a *O(NlogN)* solution to compute matrix-matrix product Q*H, where Q is a covariance 
+BBFMM2D provides a __O(N)__ solution to compute matrix-matrix product Q*H, where Q is a covariance 
 matrix of size NxN with a kernel, and N is the number of unknown values at points (x,y) in a 2D domain. 
 H is a N x m matrix with N >> m. 
 The kernel is a decaying function of the seperation between two points and takes value from [0,1].  
