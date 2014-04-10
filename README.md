@@ -2,7 +2,7 @@ mexBBFMM2D
 ==========
 
 This is the Matlab MEX gateway files to the package [BBFMM2D](https://github.com/sivaramambikasaran/BBFMM2D).
-BBFMM2D provides a __O(N)__ solution to compute matrix-matrix product Q*H, where Q is a kernel matrix of size N x N, and N is the number of unknown values at points (x,y) in a 2D domain. 
+BBFMM2D provides a __O(N)__ solution to compute matrix-matrix product Q*H, where Q(x,y) is a kernel matrix of size N x N, and N is the number of unknown values at points (x,y) in a 2D domain. 
 H is a N x m matrix with N >> m. 
 
 #### Example of kernel type:
@@ -50,7 +50,7 @@ You would be able to see the size of a 5000 x 5000 matrix.
 
 ###STEP2: Try the example problem given by mexBBFMM2D
 
-- Download the package from this [link](https://www.dropbox.com/sh/klw6e2yw8rmhsv5/ztlGYEN3zE).
+- Download the package from this [link](https://www.dropbox.com/sh/ba9mt40msyy673t/dwAZAIb35f).
 
 - Go to the folder containing `mexFMM2D.cpp`, and type Matlab command  
 
