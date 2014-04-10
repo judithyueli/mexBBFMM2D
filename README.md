@@ -48,9 +48,9 @@ This package relies on MATLAB MEX functions. In order to use MEX functions, you 
 ```
 You would be able to see the size of a 5000 x 5000 matrix.
 
-###STEP2: Try the example problem given by mexBBFMM2D
+###STEP 2: Try the example problem given by mexBBFMM2D
 
-- Download the package from this [link](https://www.dropbox.com/sh/ba9mt40msyy673t/dwAZAIb35f).
+- [Download the package from this link](https://www.dropbox.com/sh/ba9mt40msyy673t/dwAZAIb35f).
 
 - Go to the folder containing `mexFMM2D.cpp`, and type Matlab command  
 
