@@ -14,6 +14,5 @@
 #include"H2_2D_Node.hpp"
 #include"H2_2D_Tree.hpp"
 #include"kernel_Base.hpp"
-#include"kernel_Types.hpp"
 
 #endif //(__BBFMM2D_hpp__)
