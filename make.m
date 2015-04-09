@@ -1,11 +1,9 @@
 function make(var,kernel,filename)
 % Produce mex file with 'filename' for the input kernel. File extension is automatically added. 
-% For each new kernel type, run this make file first before call mexFMM2D. 
+% For each new kernel type, run this make file first before call mexFMM3D. 
 % The new kernel will be embedded in a new file 'kernelfun.hpp'
 
 % Usage:
-% syms r; f = exp(-abs(r)/30); filename = 'expfun';
-% make(r,f,filename)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%Main Function%%%%%%%
@@ -23,6 +21,9 @@ fprintf(fid,'    virtual double kernel_Func(Point r0, Point r1){\n');
 fprintf(fid,'        double %s =  sqrt((r0.x-r1.x)*(r0.x-r1.x) + (r0.y-r1.y)*(r0.y-r1.y));\n',var);
 fprintf(fid,'        double t0;         //implement your own kernel on the next line\n');
 fprintf(fid,'        %s\n',ckernel);
+fprintf(fid,'        if (isinf(t0)|| isnan(t0))\n');
+fprintf(fid,'           return 0;\n');
+fprintf(fid,'        else\n');
 fprintf(fid,'        return t0;\n');
 fprintf(fid,'    }\n');
 fprintf(fid,'};\n');
@@ -32,9 +33,8 @@ fclose(fid);
 src1 = 'BBFMM2D/src/H2_2D_Tree.cpp';
 src2 = 'BBFMM2D/src/H2_2D_Node.cpp';
 src3 = 'BBFMM2D/src/kernel_Base.cpp';
-src4 = 'BBFMM2D/src/kernel_Types.cpp';
 eigenDIR = 'eigen/';
 fmmDIR = 'BBFMM2D/header/';
-mex('-O','mexFMM2D.cpp',src1,src2,src3,src4,'-largeArrayDims',['-I',eigenDIR],['-I',fmmDIR],'-output',filename)
+mex('-O','mexFMM2D.cpp',src1,src2,src3,'-largeArrayDims',['-I',eigenDIR],['-I',fmmDIR],'-output',filename)
 disp('mex compiling is successful!')
 end
