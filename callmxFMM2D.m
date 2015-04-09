@@ -16,11 +16,12 @@ y = linspace(0,1,Ny);
 [xloc,yloc] = meshgrid(x,y);
 xloc = xloc(:);  yloc = yloc(:);
 
+
 % The right muliplier H, each column is a Nx1 vector 
 H = ones(N,100); nCheb = 6;
 
 % Clear memory associated with output
-clear QH QHexact
+% clear QH QHexact
 
 % Compute matrix-matrix product QH of dimension 10000x100
 [QH,QHexact] = expfun(xloc, yloc,H,nCheb);
