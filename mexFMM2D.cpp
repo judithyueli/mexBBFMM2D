@@ -91,7 +91,7 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     clock_t endBuild = clock();
 
     double FMMTotalTimeBuild = double(endBuild-startBuild)/double(CLOCKS_PER_SEC);
-    mexPrintf("\nTotal time taken for FMM(build tree) is: %.4g\n",FMMTotalTimeBuild);    
+    mexPrintf("\nTime taken for FMM(build tree) is: %.4g\n",FMMTotalTimeBuild);    
     
     // 2.Calculateing potential
     clock_t startA = clock();
@@ -104,14 +104,15 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     A.calculate_Potential(Atree, QHp);
     clock_t endA = clock();
     double FMMTotalTimeA = double(endA-startA)/double(CLOCKS_PER_SEC);
-    mexPrintf("\nTotal time taken for FMM(calculating potential) is: %.4g\n",FMMTotalTimeA);
+    mexPrintf("\nTime taken for FMM(calculating potential) is: %.4g\n",FMMTotalTimeA);
+    mexPrintf("\nTotal time taken for FMM is: %.4g\n",FMMTotalTimeA+FMMTotalTimeBuild);
 
     /*///////////////////////////////
     // Compute exact covariance Q //
     ///////////////////////////////*/
 
     if(nlhs == 2){
-    mexPrintf("\n Starting exact computation...\n");
+    mexPrintf("\nStarting exact computation...\n");
     clock_t start = clock();
     MatrixXd Q;
     A.kernel_2D(N, location, N, location, Q);// Q is initialized inside function A.kernel_2D
@@ -128,14 +129,14 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     end = clock();
     double exactComputingTime = double(end-start)/double(CLOCKS_PER_SEC);
 
-    mexPrintf("\nthe total computation time is: %.4g\n",exactAssemblyTime + exactComputingTime);
+    mexPrintf("\nThe total exact computation time is: %.4g\n",exactAssemblyTime + exactComputingTime);
         
     // Compute the difference
     MatrixXd QHfast = Map<MatrixXd>(QHp, N, m);
     MatrixXd error = QHfast - QHT;
     double absoluteError = error.norm();
     double relativeError = absoluteError/QHT.norm();
-    mexPrintf("the relative difference is: %13.6E \n", relativeError);
+    mexPrintf("The relative difference is: %13.6E \n", relativeError);
     
     } 
 
