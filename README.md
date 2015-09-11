@@ -79,7 +79,7 @@ The output `QHexact` is the exact product of a 10000 x 10000 covariance matrix `
 
 ```
       clear QH;                           % Must clear memory associated with output
-      QH = expfun(xloc,yloc,H,nCheb);       
+      QH = expfun(xloc,yloc,H,nCheb,print);       
 ```
   Or if you want to compare the result with exact product QHexact for smaller case to determine the least number of chebyshev nodes `nCheb` needed. Large `nCheb` will give greater accuracy but more time consuming. `nCheb` should be greater than 3.
 ```

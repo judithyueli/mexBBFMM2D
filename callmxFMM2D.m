@@ -1,7 +1,7 @@
 %% Compile mex code for new kernel
 syms r;                         % seperation between two points
 kernel = exp(-sqrt(r^0.5)/30);  % user input here, kernel has to be a symbolic function
-outputfile = 'expfun';
+outputfile = 'inv_quad';
 make(r,kernel,outputfile);
 
 %% Example: Q*H
@@ -19,10 +19,10 @@ xloc = xloc(:);  yloc = yloc(:);
 
 % The right muliplier H, each column is a Nx1 vector 
 H = ones(N,100); nCheb = 6;
-
+print = true;
 % Clear memory associated with output
 % clear QH QHexact
 
 % Compute matrix-matrix product QH of dimension 10000x100
-[QH,QHexact] = expfun(xloc, yloc,H,nCheb);
+[QH,QHexact] = expfun(xloc, yloc,H,nCheb,print);
 

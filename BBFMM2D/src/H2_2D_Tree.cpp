@@ -9,7 +9,7 @@
 */
 
 #include"H2_2D_Tree.hpp"
-H2_2D_Tree::H2_2D_Tree(const unsigned short nChebNodes, double* const charge, const vector<Point>& location, const unsigned long N, const unsigned m){
+H2_2D_Tree::H2_2D_Tree(const unsigned short nChebNodes, double* const charge, const vector<Point>& location, const unsigned long N, const unsigned m, bool print){
     
 	this->nChebNodes        =	nChebNodes;
 	this->rank              =	nChebNodes*nChebNodes;
@@ -18,7 +18,7 @@ H2_2D_Tree::H2_2D_Tree(const unsigned short nChebNodes, double* const charge, co
 	this->maxLevels         =	0;
 	this->chargeTree        =	Map<MatrixXd>(charge, N, m);// charge should be N..N..N...
     this->locationTree      =   location;
-        
+    this->print             =   print;    
     //	Get Chebyshev nodes
 	cNode               =	VectorXd(nChebNodes);
 	get_Standard_Chebyshev_Nodes(nChebNodes,cNode);
@@ -38,11 +38,14 @@ H2_2D_Tree::H2_2D_Tree(const unsigned short nChebNodes, double* const charge, co
     root->radius        =   radius;
     
 	root->index.setLinSpaced(N,0,N-1);
-    std::cout << "Assigning children..." << std::endl;
+	if(print)
+    	std::cout << "Assigning children..." << std::endl;
 	assign_Children(root);
-	std::cout << "Assigned children." << std::endl;
+	if(print)
+		std::cout << "Assigned children." << std::endl;
     build_Tree(root);
-    std::cout << "Maximum levels is: " << this->maxLevels << std::endl;
+    if(print)	
+    	std::cout << "Maximum levels is: " << this->maxLevels << std::endl;
 }
 
 //	Assigns children;

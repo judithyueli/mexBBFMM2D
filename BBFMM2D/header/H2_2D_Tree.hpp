@@ -27,7 +27,7 @@ class H2_2D_Tree{
     friend class kernel_Base;
 public:
     /*! Constructor of class H2_2D_Tree */
-    H2_2D_Tree(const unsigned short nChebNodes, double* const charge, const vector<Point>& location, const unsigned long N, const unsigned m);
+    H2_2D_Tree(const unsigned short nChebNodes, double* const charge, const vector<Point>& location, const unsigned long N, const unsigned m, bool print);
     unsigned short nChebNodes;	/**<	Number of chebyshev nodes along one direction;*/
     /*! Destructor of class H2_2D_Tree */
     ~H2_2D_Tree();
@@ -40,7 +40,7 @@ private:
 	unsigned short rank;        /**<	Rank of interaction: rank = chebnodes^2;*/
 	VectorXd cNode;             /**<	Standardized chebyshev nodes in unit square [-1,1];*/
 	MatrixXd TNode;             /**<	First rank chebyshev polynomials evaluated at chebyshev nodes;*/
-
+	bool print;
 	unsigned maxLevels;         /**<	Counts maximum number of levels in tree;*/
 
 	MatrixXd chargeTree;		/**<	All charges;*/

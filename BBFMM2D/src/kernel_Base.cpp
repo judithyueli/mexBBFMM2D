@@ -73,10 +73,12 @@ void kernel_Base::set_Tree_Potential_Zero(H2_2D_Node* node){
 void kernel_Base::calculate_Potential(H2_2D_Tree& tree, double* potential){
     MatrixXd potentialMatrix = MatrixXd::Zero(tree.N,tree.m);
     set_Tree_Potential_Zero(tree.root);
-    std::cout << "Calculating potential..." << std::endl;
+   	if(tree.print)
+    	std::cout << "Calculating potential..." << std::endl;
     calculate_Potential(tree.root,potentialMatrix,tree);
     Map<MatrixXd>(potential, potentialMatrix.rows(), potentialMatrix.cols()) = potentialMatrix;
-    std::cout << "Calculated potential." << std::endl;
+   	if(tree.print)
+    	std::cout << "Calculated potential." << std::endl;
 }
 
 //	Obtains Chebyshev node potential from well separated clusters;
