@@ -29,7 +29,7 @@ H is a N x m matrix with N >> m.
 
 ###STEP 1: Setup MEX
 
-This package relies on MATLAB MEX functions. In order to use MEX functions, you should setup mex correctly.
+This package relies on MATLAB MEX functions and MATLAB Symbolic Math Toolbox. In order to use MEX functions, you should setup mex correctly.
 
 - Select a C compiler for the MATLAB version and the operation systems installed on your computer. For a list of MATLAB supported compiler, visit [here](http://www.mathworks.com/support/sysreq/previous_releases.html)
 
