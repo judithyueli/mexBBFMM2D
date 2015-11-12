@@ -52,10 +52,25 @@ You would be able to see the size of a 5000 x 5000 matrix.
 
 - [Download the package from this link](https://www.dropbox.com/sh/ba9mt40msyy673t/dwAZAIb35f).
 
-- Go to the folder containing `mexFMM2D.cpp`, and type Matlab command  
+- Go to the folder containing `callmxFMM2D.m` where we want to compute matrix product `QH` where `Q` is a m x m kernel matrix and `H` is a m x N matrix and N << m
+
+- First specify the kernel of the matrix `Q`
 
 ```
-      callmxFMM2D
+      syms r                     % r is seperation 
+      kernel = exp(-r/30);       % specify kernel type
+```
+- Compile function `expfun.mex` for this given kernel 
+```
+      make(r,kernel,'expfun')    % compile and generate the mex file with name 'expfun'
+```
+- Use this new matlab function `expfun.mex` to compute the matrix product `QH`
+```
+      QH = expfun(xloc,yloc,H,nCheb,print);       
+```
+- If you want to compare with the exact matrix product `QHexact`
+```
+      [QH,QHexact] = expfun(xloc,yloc,H,nCheb, print);
 ```
 
 The output `QHexact` is the exact product of a 10000 x 10000 covariance matrix `Q` with kernel ![equation](http://latex.codecogs.com/gif.latex?Q%28h%29%20%3D%20%5Cexp%28-%5Cdfrac%7B%5Csqrt%7Bh%7D%7D%7B30%7D%29) and a 10000 x 100 matrix `H`. And `QH` is the product computed using BBFMM2D package. The relative difference of `QH` and `QHexact` is __3.2E-10__. The table below shows computation time on a single core CPU.
