@@ -1,9 +1,152 @@
-mexBBFMM2D
+##Quick Start Guild for mexBBFMM2D, a Matlab interface for Black Box Fast Multipole Method (BBFMM2D)  
 ==========
+
+###Function
+Perform fast matrix-matrix multiplication, P = QH
+
+###Overview
+The Fast Multipole Method is an algorithm that can be used to perform the multiplication of an N x N dense matrix Q of a certain form (referred to as the kernel, or generalized covariance) with a matrix H of size N x m (N>>m) faster than a direct matrix-vector multiplication. The direct approach has complexity O(N^2) while the BBFMM2D has linear complexity O(N). As an example, for a matrix of size 10,000x10,000 multiplied by 10,000 x 100, the BBFMM2D takes 1.4 seconds, while the direct approach takes 8.1 seconds, on a single processor laptop. The table below shows computation time on a single core CPU.
+
+|   N      |  Time in seconds  |     
+| -------: |:-----------------:|   
+| 10,000   |                1.4|
+| 100,000  |               11.4|  
+| 1000,000 |             126.2 |
+
+BBFMM2D is written in C++. For usage within a Matlab code, you should use the mexBBFMM2D, which is the Matlab MEX gateway files to the package BBFMM2D.
+
+The FMM performs the multiplication by an approximation that relies on Chebyshev interpolation to construct low-rank approximations for well-separated clusters of the kernel. In addition the use of Singular Value Decomposition ensures that the computational cost is minimal.
+The method has an approximation error that can be controlled by input parameters, which can be adjusted depending on the accuracy required.  
 
 This is the Matlab MEX gateway files to the package [BBFMM2D](https://github.com/sivaramambikasaran/BBFMM2D).
 BBFMM2D provides a __O(N)__ solution to compute matrix-matrix product Q*H, where Q(x,y) is a kernel matrix of size N x N, and N is the number of unknown values at points (x,y) in a 2D domain. 
 H is a N x m matrix with N >> m. 
+
+###Disclaimer
+
+This is a quick-start guide with easy to follow instructions on how to set up and use BBFMM2D in Matlab, with example m-files that can be used to perform matrix-vector and matrix-matrix multiplication. A reasonably good knowledge of Matlab is assumed and minimal understanding of the FMM  theory is needed.  
+
+For a more involved description of the code and the method please see [here](https://github.com/sivaramambikasaran/BBFMM2D), and for a full description of the algorithm see __Reference__.
+
+In this guide, we will use the example of the multiplication of a Gaussian covariance matrix Q (termed as Gaussian kernel) with a random vector b, and a random matrix B consisting of k column vectors. However, the method can also be applied for other smooth kernels.
+
+###Quick start guide
+
+####Step 1:  Download the code and supporting software
+
+####Step 1A:  Check if you have MEX and MATLAB Symbolic Math Toolbox set up in Matlab
+
+This package relies on MATLAB MEX functions and MATLAB Symbolic Math Toolbox. In order to use MEX functions, you should setup mex.
+
+Setup MEX by typing the following MATLAB command
+```
+      mex -setup  
+```
+
+To ensure that  MEX is installed, try an example provided by MATLAB:
+```
+copyfile([matlabroot,'/extern/examples/mex/arraySize.c'],'./','f')     
+mex -v arraySize.c     
+arraySize(5000) 
+```
+
+The last two lines of the screen output will read  
+
+```
+Dimensions: 5000x5000
+Size of  array in kilobytes: 24414
+```
+
+If you have trouble with setting up mex, see [here](http://www.mathworks.com/support/sysreq/previous_releases.html)
+####Step 1B:  Download the code from https://github.com/judithyueli/mexBBFMM2D/archive/master.zip
+
+A folder called `mexBBFMM2D` should appear, which includes the folders
+`BBFMM2D\` and `Eigen\`, as well as one example m-files (`callmxFMM2D.m`) that we will use in this quick start quide. These files will be used to compile, set-up, test and use the `BBFMM2D`. The user only needs to change this m-file. No modifications will be needed to the contents of the folder `BBFMM2D` which includes the c++ source code. 
+
+####Step 2: Compile the mex file
+
+__A.__ Open file `compilemex.m`
+
+__B.__ Determine your kernel expression (line 3) 
+
+__C.__ Give your BBFMM2D case a name (line 4), e.g. 
+
+```
+kernel = exp(-sqrt(r^0.5)/30);
+outputfile = 'case1';
+```
+
+The code will compile and will create a function with the name `case1.mexmaci64` (the name will change depending on computer architecture).
+
+NOTE!! This step should be performed every time the kernel Q is changed (because the mex file should be recompiled)
+
+
+####Step 3: Run example
+
+__Example filename:__ `callmxFMM2D.m`
+
+__Example description:__ 
+We have a 2D domain of size 100x100. The covariance matrix Q of this domain is size 10000x10000. Running `mexBBFMM2D` will perform the multiplication of `Q` (as defined by the kernel in `compilemex.m`) with a matrix `H`.
+
+`mexBBFMM2D` can be run in two modes, a testing mode and an application mode. 
+
+__Testing mode:__
+
+```
+[QH,QHexact] = case1(xloc, yloc,H,nCheb,print);
+```
+
+The code multiply `Q` and `H` by both BBFMM2D and by direct multiplication and will compare the computational time for the two methods and give the approximation error of BBFMM2D. This mode is useful when one wants to determine how many Chebyshev nodes to use for a given approximation error and will take a long time because the direct multiplication is also performed. Caution! Do not use for large matrices because direct multiplication will take for ever. 
+
+__Input__: 
+
+`xloc`, `yloc`: These are the coordinates of each grid point. These are mx1 vectors arranged in a consistent order. For example for a 2x2 grid [0,1] it would be xloc=[0 0 1 1]’ and yloc=[0 1 0 1]’. 
+
+`H`: the matrix we want to multiply Q with (Q*H)
+
+`nCheb`: number of Chebyshev nodes (the higher nCheb, the higher nCheb, the higher the accuracy, but higher the computational cost
+
+`print`: flag for printing the output details
+
+__Output:__ 
+
+`QH`: the product of Q and H as given by BBFMM2D
+
+`QHexact`: the product of Q and H by direct multiplication
+
+
+Example results for `QH` with `nCheb`=4,5,6. Large `nCheb` will give greater accuracy but more time consuming. 
+
+|   nCheb       | accuracy          |  Time(s) with BBFMM2D  | Time(s) with direct multiplication|     
+| ------------: |:-----------------:|:----------------------:|:---------------------------------:|
+| 4  		|        4.45E-08   |                   0.67s|                            8.01s|
+| 5  		|       1.66E-09    |                   0.85s|                            8.06s|
+| 6  		|      3.20E-10     |                   1.44s|                            8.34s|
+
+__Application mode:__ 
+```
+QH = case1(xloc, yloc,H,nCheb,print);
+```
+
+Input: same as in testing mode.
+
+####Step 4: Run you own example
+
+- Determine your kernel type and compile the mex file  (step 2)
+- Set up your grid coordinates in two vectors x and y
+- Run mexBBFMM2D in testing mode to determine number of Chebyshev modes
+- Run mexBBFMM2D in application mode for your own example.
+
+
+### APPENDIX
+
+__Kernel Options__
+
+`r` : distance between two points
+
+`L` : length scale parameter
+
+`\sigma^2`: variance parameter
 
 #### Example of kernel type:
 + Gaussian kernel 
@@ -26,82 +169,6 @@ H is a N x m matrix with N >> m.
 
       ![powerkernel](http://latex.codecogs.com/gif.latex?%5Cdpi%7B150%7D%20Q%28r%29%20%3D%20%5Ctheta%20r%5Es%2C%20%5Ctheta%20%3E0%2C%200%20%3Cs%20%3C2)
         
-
-###STEP 1: Setup MEX
-
-This package relies on MATLAB MEX functions and MATLAB Symbolic Math Toolbox. In order to use MEX functions, you should setup mex correctly.
-
-- Select a C compiler for the MATLAB version and the operation systems installed on your computer. For a list of MATLAB supported compiler, visit [here](http://www.mathworks.com/support/sysreq/previous_releases.html)
-
-- Setup MEX by typing the following MATLAB command
-
-```
-      mex -setup 
-```
-
-- To ensure you have MEX installed appropriately, try an example provided by MATLAB:
-
-```
-	copyfile([matlabroot,'/extern/examples/mex/arraySize.c'],'./','f')
-	mex -v arraySize.c
-	arraySize(5000)
-```
-You would be able to see the size of a 5000 x 5000 matrix.
-
-###STEP 2: Try the example problem given by mexBBFMM2D
-
-- [Download the package from this link](https://www.dropbox.com/sh/ba9mt40msyy673t/dwAZAIb35f).
-
-- Go to the folder containing `callmxFMM2D.m` where we want to compute matrix product `QH` where `Q` is a m x m kernel matrix and `H` is a m x N matrix and N << m
-
-- First specify the kernel of the matrix `Q`
-
-```
-      syms r                     % r is seperation 
-      kernel = exp(-r/30);       % specify kernel type
-```
-- Compile function `expfun.mex` for this given kernel 
-```
-      make(r,kernel,'expfun')    % compile and generate the mex file with name 'expfun'
-```
-- Use this new matlab function `expfun.mex` to compute the matrix product `QH`
-```
-      QH = expfun(xloc,yloc,H,nCheb,print);       
-```
-- If you want to compare with the exact matrix product `QHexact`
-```
-      [QH,QHexact] = expfun(xloc,yloc,H,nCheb, print);
-```
-
-The output `QHexact` is the exact product of a 10000 x 10000 covariance matrix `Q` with kernel ![equation](http://latex.codecogs.com/gif.latex?Q%28h%29%20%3D%20%5Cexp%28-%5Cdfrac%7B%5Csqrt%7Bh%7D%7D%7B30%7D%29) and a 10000 x 100 matrix `H`. And `QH` is the product computed using BBFMM2D package. The relative difference of `QH` and `QHexact` is __3.2E-10__. The table below shows computation time on a single core CPU.
-
-|   N      |  Time in seconds  |     
-| -------: |:-----------------:|   
-| 10,000   |                2.6|
-| 100,000  |               27.3|  
-| 1000,000 |              242.5|   
-
-### Step 3: Use mexBBFMM2D for your own research problem:
-
-1.Compile: Go to the folder __mexBBFMM2D/__ 
-```
-      syms r                     % r is seperation 
-      kernel = exp(-r/30);       % specify kernel type
-      make(r,kernel,'expfun')    % compile and generate the mex file with name 'expfun'
-```
-
-2.You should find __expfun.mex__ in your folder. Now if you want to compute a matrix-matrix product Q*H, move __expfun.mex__ to the desired directory you are working on. You can use it as an ordinary MATLAB function by including the following code to your script
-
-```
-      clear QH;                           % Must clear memory associated with output
-      QH = expfun(xloc,yloc,H,nCheb,print);       
-```
-  Or if you want to compare the result with exact product QHexact for smaller case to determine the least number of chebyshev nodes `nCheb` needed. Large `nCheb` will give greater accuracy but more time consuming. 
-  ```
-      [QH,QHexact] = expfun(xloc,yloc,H,nCheb, print);
-```
-
-3.For a new kernel type, repeat step 1 to 2. Otherwise step 1 can be skipped. 
 
 #### This package uses:
 
