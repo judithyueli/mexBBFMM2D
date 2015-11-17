@@ -2,10 +2,10 @@
 ==========
 
 ###Function
-Perform fast matrix-matrix multiplication, P = QH
+Perform fast multiplication of a kernel Q with a vector or matrix, P = QH
 
 ###Overview
-The Fast Multipole Method is an algorithm that can be used to perform the multiplication of an N x N dense matrix Q of a certain form (referred to as the kernel, or generalized covariance) with a matrix H of size N x m (N>>m) faster than a direct matrix-vector multiplication. The direct approach has complexity O(N^2) while the BBFMM2D has linear complexity O(N). As an example, for a matrix of size 10,000x10,000 multiplied by 10,000 x 100, the BBFMM2D takes 1.4 seconds, while the direct approach takes 8.1 seconds, on a single processor laptop. The table below shows computation time on a single core CPU.
+The Fast Multipole Method is an algorithm that can be used to perform fast multiplication of an N x N dense matrix Q(x,y) where N is the number of unknown values at points (x,y) in a 2D domain, with a matrix H of size N x m (N>>m). The direct multiplication approach has complexity O(N^2), while the BBFMM2D has linear complexity O(N). As an example, for a matrix of size 10,000x10,000 multiplied by 10,000 x 100, the BBFMM2D takes 1.4 seconds, while the direct approach takes 8.1 seconds, on a single processor laptop. The table below shows computation time on a single core CPU.
 
 |   N      |  Time in seconds  |     
 | -------: |:-----------------:|   
@@ -13,28 +13,23 @@ The Fast Multipole Method is an algorithm that can be used to perform the multip
 | 100,000  |               11.4|  
 | 1000,000 |             126.2 |
 
-BBFMM2D is written in C++. For usage within a Matlab code, you should use the mexBBFMM2D, which is the Matlab MEX gateway files to the package BBFMM2D.
+BBFMM2D is written in C++ (https://github.com/sivaramambikasaran/BBFMM2D). For usage within a Matlab code,  the mexBBFMM2D can be used, which is the Matlab MEX gateway files to the package BBFMM2D.
 
-The FMM performs the multiplication by an approximation that relies on Chebyshev interpolation to construct low-rank approximations for well-separated clusters of the kernel. In addition the use of Singular Value Decomposition ensures that the computational cost is minimal.
-The method has an approximation error that can be controlled by input parameters, which can be adjusted depending on the accuracy required.  
-
-This is the Matlab MEX gateway files to the package [BBFMM2D](https://github.com/sivaramambikasaran/BBFMM2D).
-BBFMM2D provides a __O(N)__ solution to compute matrix-matrix product Q*H, where Q(x,y) is a kernel matrix of size N x N, and N is the number of unknown values at points (x,y) in a 2D domain. 
-H is a N x m matrix with N >> m. 
+The FMM performs the multiplication by an approximation that relies on Chebyshev interpolation to construct low-rank approximations for well-separated clusters of the kernel. In addition the use of Singular Value Decomposition ensures that the computational cost is minimal. The method has an approximation error that can be controlled by input parameters, which can be adjusted depending on the accuracy required.  
 
 ###Disclaimer
 
-This is a quick-start guide with easy to follow instructions on how to set up and use BBFMM2D in Matlab, with example m-files that can be used to perform matrix-vector and matrix-matrix multiplication. A reasonably good knowledge of Matlab is assumed and minimal understanding of the FMM  theory is needed.  
+This is a quick-start guide with easy to follow instructions on how to set up and use mexBBFMM2D in Matlab, with an example m-file that can be used to perform matrix-vector and matrix-matrix multiplication. A reasonably good knowledge of Matlab is assumed and minimal understanding of the FMM  theory is needed.  
 
 For a more involved description of the code and the method please see [here](https://github.com/sivaramambikasaran/BBFMM2D), and for a full description of the algorithm see __Reference__.
 
-In this guide, we will use the example of the multiplication of a Gaussian covariance matrix Q (termed as Gaussian kernel) with a random vector b, and a random matrix B consisting of k column vectors. However, the method can also be applied for other smooth kernels.
+In this guide, we will use the example of the multiplication of a Gaussian covariance matrix Q (termed as Gaussian kernel) with a matrix H. The method can also be applied for other smooth kernels (see Appendix).
 
 ###Quick start guide
 
 ####Step 1:  Download the code and supporting software
 
-####Step 1A:  Check if you have MEX and MATLAB Symbolic Math Toolbox set up in Matlab
+####Step 1a:  Check if you have MEX and MATLAB Symbolic Math Toolbox set up in Matlab
 
 This package relies on MATLAB MEX functions and MATLAB Symbolic Math Toolbox. In order to use MEX functions, you should setup mex.
 
@@ -50,7 +45,7 @@ mex -v arraySize.c
 arraySize(5000) 
 ```
 
-The last two lines of the screen output will read  
+The last two lines of the screen output should read  
 
 ```
 Dimensions: 5000x5000
@@ -58,10 +53,11 @@ Size of  array in kilobytes: 24414
 ```
 
 If you have trouble with setting up mex, see [here](http://www.mathworks.com/support/sysreq/previous_releases.html)
-####Step 1B:  Download the code from https://github.com/judithyueli/mexBBFMM2D/archive/master.zip
+
+####Step 1b:  Download the code from https://github.com/judithyueli/mexBBFMM2D/archive/master.zip
 
 A folder called `mexBBFMM2D` should appear, which includes the folders
-`BBFMM2D\` and `Eigen\`, as well as one example m-files (`callmxFMM2D.m`) that we will use in this quick start quide. These files will be used to compile, set-up, test and use the `BBFMM2D`. The user only needs to change this m-file. No modifications will be needed to the contents of the folder `BBFMM2D` which includes the c++ source code. 
+`BBFMM2D\` and `Eigen\`, as well as an m-file called (`compilemex.m`) and an example m-file (`callmxFMM2D.m`) that we will use in this quick start quide. These files will be used to compile, set-up, test and use the `BBFMM2D`. The user only needs to change these m-files. No modifications will be needed to the contents of the folder `BBFMM2D` which includes the c++ source code. 
 
 ####Step 2: Compile the mex file
 
@@ -76,9 +72,9 @@ kernel = exp(-sqrt(r^0.5)/30);
 outputfile = 'case1';
 ```
 
-The code will compile and will create a function with the name `case1.mexmaci64` (the name will change depending on computer architecture).
+Run compilemex.m. The code will compile and will create a function with the name `case1.mexmaci64` (the name will change depending on computer architecture).
 
-NOTE!! This step should be performed every time the kernel Q is changed (because the mex file should be recompiled)
+NOTE!! This step should be performed every time the kernel Q is changed (because the mex file should be recompiled).
 
 
 ####Step 3: Run example
@@ -86,7 +82,7 @@ NOTE!! This step should be performed every time the kernel Q is changed (because
 __Example filename:__ `callmxFMM2D.m`
 
 __Example description:__ 
-We have a 2D domain of size 100x100. The covariance matrix Q of this domain is size 10000x10000. Running `mexBBFMM2D` will perform the multiplication of `Q` (as defined by the kernel in `compilemex.m`) with a matrix `H`.
+This example is for a 2D domain of size 100x100. The covariance matrix Q of this domain is of size 10000x10000. Running `mexBBFMM2D` will perform the multiplication of `Q` (as defined by the kernel in `compilemex.m`) with a matrix `H` given by ones(10000,100). 
 
 `mexBBFMM2D` can be run in two modes, a testing mode and an application mode. 
 
@@ -96,11 +92,11 @@ __Testing mode:__
 [QH,QHexact] = case1(xloc, yloc,H,nCheb,print);
 ```
 
-The code multiply `Q` and `H` by both BBFMM2D and by direct multiplication and will compare the computational time for the two methods and give the approximation error of BBFMM2D. This mode is useful when one wants to determine how many Chebyshev nodes to use for a given approximation error and will take a long time because the direct multiplication is also performed. Caution! Do not use for large matrices because direct multiplication will take for ever. 
+In this mode, the code will multiply `Q` and `H` by both BBFMM2D and by direct multiplication and will compare the computational time for the two methods and give the approximation error of BBFMM2D. This mode is useful when one wants to determine how many Chebyshev nodes to use for a given approximation error and will take a long time because the direct multiplication is also performed. Caution! Do not use for large matrices because direct multiplication will take for ever. 
 
 __Input__: 
 
-`xloc`, `yloc`: These are the coordinates of each grid point. These are mx1 vectors arranged in a consistent order. For example for a 2x2 grid [0,1] it would be xloc=[0 0 1 1]’ and yloc=[0 1 0 1]’. 
+`xloc`, `yloc`: These are the coordinates of each grid point. These are mx1 vectors arranged in a consistent order. For example for a 2x2 grid in [0,1] it would be xloc=[0 0 1 1]’ and yloc=[0 1 0 1]’. 
 
 `H`: the matrix we want to multiply Q with (Q*H)
 
@@ -128,7 +124,7 @@ __Application mode:__
 QH = case1(xloc, yloc,H,nCheb,print);
 ```
 
-Input: same as in testing mode.
+Input: same as in testing mode. Only performs the multiplication using BBFMM2D and can be used for very large cases.
 
 ####Step 4: Run you own example
 
