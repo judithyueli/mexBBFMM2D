@@ -130,11 +130,13 @@ In this mode, the code will multiply `Q` and `H` by both BBFMM2D and by direct m
 
 Example results for `QH` with `nCheb`=4,5,6. Large `nCheb` will give greater accuracy but more time consuming. 
 
-|   nCheb       | accuracy          |  Time(s) with BBFMM2D  | Time(s) with direct multiplication|     
+|   nCheb       | Rel Difference          |  Time(s) with BBFMM2D  | Time(s) with direct multiplication|     
 | ------------: |:-----------------:|:----------------------:|:---------------------------------:|
 | 4  		|        4.45E-08   |                   0.67s|                            8.01s|
 | 5  		|       1.66E-09    |                   0.85s|                            8.06s|
 | 6  		|      3.20E-10     |                   1.44s|                            8.34s|
+
+Relative Difference = norm (QHfast - QH) / norm(QH)
 
 __Application mode:__ 
 ```
