@@ -94,16 +94,19 @@ This example is for a 2D regular grid of size 100 x 100. The covariance matrix Q
 
 __Testing mode:__
 
-To run the example, simply run: 
+To run the example,  run the command: 
 
 ```
-callmxFMM2D;
+QH = callmxFMM2D(ExecFile,TestingMode);
 ```
 
-Open `callmxFMM2D.m` to inspect the commands. The first part sets up the grid and other parameters required by BBFMM2D that will be explained in detail below. The command that runs BBFMM2D is in the last line of the m-file: 
+Input: `ExecFile` is the name of the executable you defined in compilemex.m
+       `TestingMode` is 1 if testing and 0 otherwise.
+
+Open `callmxFMM2D.m` to inspect the commands. The first part sets up the grid and other parameters required by BBFMM2D that will be explained in detail below. The command that runs BBFMM2D is: 
 
 ```
-[QH,QHexact] = case1(xloc, yloc,H,nCheb,print);
+[QH,QHexact] = ExecFile(xloc, yloc,H,nCheb,print);
 ```
 __Input__: 
 
@@ -135,10 +138,10 @@ Example results for `QH` with `nCheb`=4,5,6. Large `nCheb` will give greater acc
 
 __Application mode:__ 
 ```
-QH = case1(xloc, yloc,H,nCheb,print);
+QH = ExecFile(xloc, yloc,H,nCheb,print);
 ```
 
-Input: same as in testing mode. Only performs the multiplication using BBFMM2D and can be used for very large cases.
+Input: same as in testing mode. Performs the multiplication using BBFMM2D only and can be used for very large cases.
 
 ####Step 4: Run you own example
 
