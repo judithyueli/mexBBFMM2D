@@ -1,9 +1,3 @@
-%% Compile mex code for new kernel
-syms r;                         % seperation between two points
-kernel = exp(-sqrt(r^0.5)/30);  % user input here, kernel has to be a symbolic function
-outputfile = 'inv_quad';
-make(r,kernel,outputfile);
-
 %% Example: Q*H
 
 % Info on dimensions
@@ -24,5 +18,5 @@ print = true;
 % clear QH QHexact
 
 % Compute matrix-matrix product QH of dimension 10000x100
-[QH,QHexact] = expfun(xloc, yloc,H,nCheb,print);
+[QH,QHexact] = case1(xloc, yloc,H,nCheb,print);
 
