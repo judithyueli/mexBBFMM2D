@@ -1,23 +1,38 @@
-%% Example: Q*H
+QH = callmxFMM2D(Outputname,TestingMode)
+
+%% This is an example for using mexBBFMM2D to multiply the covariance matrix for a regular 100 x 100 grid, with matrix H. 
+
+%Input:  Outputname as set in the compilemex.m
+%        TestingMode: 1 for testing 0 for application
+%Output: product QH
+
 
 % Grid information - regular 100x100 grid in [0,1]
-Nx =100; Ny = 100; N = Nx*Ny;
+% xloc, yloc: These are the coordinates of each grid point provided as vectors. 
+%             These are m x 1 vectors arranged in a consistent order. 
+%             For example for a 2x2 grid in [0,1] it would be xloc=[0 0 1 1]’ and yloc=[0 1 0 1]’. 
+%             The grid does not have to be regular or structured.
 
-% Store location (x,y) for each grid in a column-wise fashion
-% x and y each is a Nx1 vector
+% Modify xloc and yloc for your own example
+
+Nx =100; Ny = 100; N = Nx*Ny;
 x = linspace(0,1,Nx);
 y = linspace(0,1,Ny);
 [xloc,yloc] = meshgrid(x,y);
 xloc = xloc(:);  yloc = yloc(:);
 
+% Modify H, nCheb and PringFlag for your own example
 
-%% testing mode 
 H = ones(N,100);    % right muliplier H, each column is a Nx1 vector
 nCheb = 6;          % number of Chebyshev node
-PrintFlag = true;       % print exact computation time and accuracy
+PrintFlag = true;   % print exact computation time and accuracy
 
-% Compute matrix-matrix product QH of dimension 10000x100
-[QH,QHexact] = case1(xloc, yloc,H,nCheb,PrintFlag);
-
-%% application mode
-QH = case1(xloc, yloc,H,nCheb,PrintFlag);
+if TestingMode
+  %% testing mode 
+  % Compute matrix-matrix product QH of dimension 10000x100
+  eval('[QH,QHexact] = ',Outputname,'(xloc, yloc,H,nCheb,PrintFlag);');
+else
+  %% application mode
+  eval('QH = ',Outputname,'(xloc, yloc,H,nCheb,PrintFlag);');
+end
+  
