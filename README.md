@@ -13,17 +13,16 @@ The Fast Multipole Method is an algorithm that can be used to perform fast multi
 | 100,000  |               11.4|  
 | 1,000,000 |             126.2 |
 
-BBFMM2D is written in C++ (https://github.com/sivaramambikasaran/BBFMM2D). For usage within a MATLAB code,  the mexBBFMM2D can be used, which is the Matlab MEX gateway files to the package BBFMM2D.   
+BBFMM2D performs the multiplication by an approximation that relies on Chebyshev interpolation. For details about the method please see Fong and Darve, 2009. The method has an approximation error that can be controlled by input parameters, which can be adjusted depending on the accuracy required.  The package BBFMM2D is written in C++ (https://github.com/sivaramambikasaran/BBFMM2D). mexBBFMM2D provides a MATLAB interface for the package BBFMM2D.
 
-The FMM performs the multiplication by an approximation that relies on Chebyshev interpolation to construct low-rank approximations for well-separated clusters of the kernel. In addition the use of Singular Value Decomposition ensures that the computational cost is minimal. The method has an approximation error that can be controlled by input parameters, which can be adjusted depending on the accuracy required.  
 
 ###Disclaimer
 
 This is a quick-start guide with instructions on how to set up and use mexBBFMM2D in MATLAB, with an example m-file that can be used to perform matrix-vector and matrix-matrix multiplication. A reasonably good knowledge of MATLAB is assumed and minimal understanding of the FMM theory is needed.  
 
-For a more involved description of the code and the method please see [here](https://github.com/sivaramambikasaran/BBFMM2D), and for a full description of the algorithm see [Darve and Fong 2006] and __Reference__.
+For a more involved description of the code and the method please see [here](https://github.com/sivaramambikasaran/BBFMM2D), and for a full description of the algorithm see [Fong and Darve 2006] in section __Reference__.
 
-In this guide, we will use the example of the multiplication of a Gaussian covariance matrix Q (termed as Gaussian kernel) with a matrix H. The method can also be applied for other smooth kernels (see __Appendix__).
+In this guide, we will use the example of the multiplication of a Gaussian covariance matrix Q (termed as Gaussian kernel) with a matrix H. The method can also be applied for other smooth kernels (see section __Appendix__).
 
 ###Quick start guide
 
@@ -58,8 +57,11 @@ If you have trouble with setting up mex, see [here](http://www.mathworks.com/sup
 
 ####Step 1b:  Download the code from https://github.com/judithyueli/mexBBFMM2D/archive/master.zip
 
-A folder called `mexBBFMM2D-master` should appear. Copy the folder `mexBBFMM2D-master` to your specific working directory, and in MATLAB go to the current directory, which includes the folders
+A folder called `mexBBFMM2D-master` will be downloaded. Copy the folder `mexBBFMM2D-master` to your specific working directory. In MATLAB, set the current folder to be the directory where the downloaded folder was copied. You will see the folders
 `BBFMM2D\` and `Eigen\`, as well as an m-file called (`compilemex.m`) and an example m-file (`callmxFMM2D.m`) that we will use in this quick start quide. These m-files will be used to compile, set-up, test and use the `BBFMM2D`. The user only needs to change these m-files. No modifications will be needed to the contents of the folder `BBFMM2D` which includes the c++ source code. 
+
+Note: To use BBFMM2D, you need to be within the folder containing BBFMM2D files. 
+__add note about path. Can the user add the folder in the path and operate from a different directory?__
 
 ####Step 2: Compile the mex file
 
@@ -67,7 +69,7 @@ __A.__ Open file `compilemex.m`
 
 __B.__ Specify your kernel expression (line 3) 
 
-__C.__ Give your BBFMM2D case a name (line 4), e.g. 
+__C.__ Give your BBFMM2D case a name (line 4), e.g. case1
 
 ```
 syms r 								% define independent variable as a symbolic variable
@@ -75,17 +77,18 @@ kernel = exp(-sqrt(r^0.5)/30);		% define kernel using symbolic expression (has t
 outputfile = 'case1';
 ```
 
-Run `compilemex.m`. The code will compile and will create a mex file function with the name `case1.mexmaci64`(the extension will change depending on computer architecture).
+Run `compilemex.m`. The code will compile and will create a file function with the name you provided for variable outputfile (e.g. `case1.mexmaci64`). The extension will change depending on computer architecture.
 
-NOTE!! This step should be performed every time the kernel Q is changed (because the mex file should be recompiled).
+For Windows users: If you get an error about file ammintrin.h missing, follow instructions here: http://www.mathworks.com/matlabcentral/answers/90383-fix-problem-when-mex-cpp-file
 
+NOTE!! The compilation (step 2)  should be performed every time the kernel Q is changed (because the mex file should be recompiled).
 
 ####Step 3: Run example
 
 __Example filename:__ `callmxFMM2D.m`
 
 __Example description:__ 
-This example is for a 2D grid of size 100x100. The covariance matrix Q of this grid has size 10000x10000. Running `mexBBFMM2D` will perform the multiplication of `Q` (as defined by the kernel in `compilemex.m`) with a matrix `H` given by ones(10000,100). 
+This example is for a 2D regular grid of size 100 x 100. The covariance matrix Q of this grid has size 10,000 x 10,000. Running `mexBBFMM2D` will perform the multiplication of `Q` (as defined by the kernel in `compilemex.m`) with a matrix `H` given by ones(10000,100). 
 
 `mexBBFMM2D` can be run in two modes, a testing mode and an application mode. 
 
@@ -97,20 +100,20 @@ To run the example, simply run:
 callmxFMM2D;
 ```
 
-Open `callmxFMM2D.m` to inspect the commands. The first part sets up the grid and parameters required by BBFMM2D that will be explained below. The command that runs BBFMM2D is in the last line of the m-file: 
+Open `callmxFMM2D.m` to inspect the commands. The first part sets up the grid and other parameters required by BBFMM2D that will be explained in detail below. The command that runs BBFMM2D is in the last line of the m-file: 
 
 ```
 [QH,QHexact] = case1(xloc, yloc,H,nCheb,print);
 ```
 __Input__: 
 
-`xloc`, `yloc`: These are the coordinates of each grid point. These are mx1 vectors arranged in a consistent order. For example for a 2x2 grid in [0,1] it would be xloc=[0 0 1 1]’ and yloc=[0 1 0 1]’. 
+`xloc`, `yloc`: These are the coordinates of each grid point provided as vectors. These are m x 1 vectors arranged in a consistent order. For example for a 2x2 grid in [0,1] it would be xloc=[0 0 1 1]’ and yloc=[0 1 0 1]’. The grid does not have to be regular or structured. 
 
 `H`: the matrix we want to multiply Q with (multiply Q with H)
 
-`nCheb`: number of Chebyshev nodes (the higher nCheb, the higher the accuracy, but higher the computational cost), integers between `4` to `6` are suggested, try start with `4`
+`nCheb`: number of Chebyshev nodes (the higher nCheb, the higher the accuracy, but higher the computational cost), integers between `4` to `6` are suggested. Try starting with `4` and increase to achieve desirable accuracy.
 
-`print`: flag for printing the output details
+`PrintFlag`: flag for printing the output details
 
 __Output:__ 
 
