@@ -75,7 +75,7 @@ kernel = exp(-sqrt(r^0.5)/30);		% define kernel using symbolic expression (has t
 outputfile = 'case1';
 ```
 
-Run `compilemex.m`. The code will compile and will create a function with the name `case1.mexmaci64` (the name will change depending on computer architecture).
+Run `compilemex.m`. The code will compile and will create a mex file function with the name `case1.mexmaci64`(the extension will change depending on computer architecture).
 
 NOTE!! This step should be performed every time the kernel Q is changed (because the mex file should be recompiled).
 
@@ -85,7 +85,7 @@ NOTE!! This step should be performed every time the kernel Q is changed (because
 __Example filename:__ `callmxFMM2D.m`
 
 __Example description:__ 
-This example is for a 2D domain of size 100x100. The covariance matrix Q of this domain is of size 10000x10000. Running `mexBBFMM2D` will perform the multiplication of `Q` (as defined by the kernel in `compilemex.m`) with a matrix `H` given by ones(10000,100). 
+This example is for a 2D grid of size 100x100. The covariance matrix Q of this grid has size 10000x10000. Running `mexBBFMM2D` will perform the multiplication of `Q` (as defined by the kernel in `compilemex.m`) with a matrix `H` given by ones(10000,100). 
 
 `mexBBFMM2D` can be run in two modes, a testing mode and an application mode. 
 
@@ -97,7 +97,7 @@ To run the example, simply run:
 callmxFMM2D;
 ```
 
-Opem callmxFMM2D.m to inspect the commands. The first part sets up the grid and parameters required by BBFMM2D that will be explained below. The command that runs BBFMM2D is in the last line of the m-file: 
+Open `callmxFMM2D.m` to inspect the commands. The first part sets up the grid and parameters required by BBFMM2D that will be explained below. The command that runs BBFMM2D is in the last line of the m-file: 
 
 ```
 [QH,QHexact] = case1(xloc, yloc,H,nCheb,print);
@@ -106,9 +106,9 @@ __Input__:
 
 `xloc`, `yloc`: These are the coordinates of each grid point. These are mx1 vectors arranged in a consistent order. For example for a 2x2 grid in [0,1] it would be xloc=[0 0 1 1]’ and yloc=[0 1 0 1]’. 
 
-`H`: the matrix we want to multiply Q with (Q*H)
+`H`: the matrix we want to multiply Q with (multiply Q with H)
 
-`nCheb`: number of Chebyshev nodes (the higher nCheb, the higher nCheb, the higher the accuracy, but higher the computational cost
+`nCheb`: number of Chebyshev nodes (the higher nCheb, the higher the accuracy, but higher the computational cost), integers between `4` to `6` are suggested, try start with `4`
 
 `print`: flag for printing the output details
 
