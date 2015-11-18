@@ -1,4 +1,4 @@
-##Quick Start Guild for mexBBFMM2D, a Matlab interface for Black Box Fast Multipole Method (BBFMM2D)  
+##Quick Start Guide for mexBBFMM2D, a MATLAB interface for Black Box Fast Multipole Method (BBFMM2D)  
 ==========
 
 ###Function
@@ -11,19 +11,19 @@ The Fast Multipole Method is an algorithm that can be used to perform fast multi
 | -------: |:-----------------:|   
 | 10,000   |                1.4|
 | 100,000  |               11.4|  
-| 1000,000 |             126.2 |
+| 1,000,000 |             126.2 |
 
-BBFMM2D is written in C++ (https://github.com/sivaramambikasaran/BBFMM2D). For usage within a Matlab code,  the mexBBFMM2D can be used, which is the Matlab MEX gateway files to the package BBFMM2D.
+BBFMM2D is written in C++ (https://github.com/sivaramambikasaran/BBFMM2D). For usage within a MATLAB code,  the mexBBFMM2D can be used, which is the Matlab MEX gateway files to the package BBFMM2D.   
 
 The FMM performs the multiplication by an approximation that relies on Chebyshev interpolation to construct low-rank approximations for well-separated clusters of the kernel. In addition the use of Singular Value Decomposition ensures that the computational cost is minimal. The method has an approximation error that can be controlled by input parameters, which can be adjusted depending on the accuracy required.  
 
 ###Disclaimer
 
-This is a quick-start guide with easy to follow instructions on how to set up and use mexBBFMM2D in Matlab, with an example m-file that can be used to perform matrix-vector and matrix-matrix multiplication. A reasonably good knowledge of Matlab is assumed and minimal understanding of the FMM  theory is needed.  
+This is a quick-start guide with instructions on how to set up and use mexBBFMM2D in MATLAB, with an example m-file that can be used to perform matrix-vector and matrix-matrix multiplication. A reasonably good knowledge of MATLAB is assumed and minimal understanding of the FMM theory is needed.  
 
-For a more involved description of the code and the method please see [here](https://github.com/sivaramambikasaran/BBFMM2D), and for a full description of the algorithm see __Reference__.
+For a more involved description of the code and the method please see [here](https://github.com/sivaramambikasaran/BBFMM2D), and for a full description of the algorithm see [Darve and Fong 2006] and __Reference__.
 
-In this guide, we will use the example of the multiplication of a Gaussian covariance matrix Q (termed as Gaussian kernel) with a matrix H. The method can also be applied for other smooth kernels (see Appendix).
+In this guide, we will use the example of the multiplication of a Gaussian covariance matrix Q (termed as Gaussian kernel) with a matrix H. The method can also be applied for other smooth kernels (see __Appendix__).
 
 ###Quick start guide
 
@@ -37,7 +37,7 @@ Setup MEX by typing the following MATLAB command
 ```
       mex -setup  
 ```
-
+__For Mac:__
 If you get an error saying that SDK files are missing (e.g. ... Looking for folder '/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk' ...No.) you can find the sdk files here https://github.com/phracker/MacOSX-SDKs/releases. Download those that are missing and place them in the appropriate directories based on the error message you get. 
 
 Once mex -setup runs successfully, to ensure that  MEX is installed, try the following commands:
@@ -58,14 +58,14 @@ If you have trouble with setting up mex, see [here](http://www.mathworks.com/sup
 
 ####Step 1b:  Download the code from https://github.com/judithyueli/mexBBFMM2D/archive/master.zip
 
-A folder called `mexBBFMM2D` should appear, which includes the folders
-`BBFMM2D\` and `Eigen\`, as well as an m-file called (`compilemex.m`) and an example m-file (`callmxFMM2D.m`) that we will use in this quick start quide. These files will be used to compile, set-up, test and use the `BBFMM2D`. The user only needs to change these m-files. No modifications will be needed to the contents of the folder `BBFMM2D` which includes the c++ source code. 
+A folder called `mexBBFMM2D-master` should appear. Copy the folder `mexBBFMM2D-master` to your specific working directory, and in MATLAB go to the current directory, which includes the folders
+`BBFMM2D\` and `Eigen\`, as well as an m-file called (`compilemex.m`) and an example m-file (`callmxFMM2D.m`) that we will use in this quick start quide. These m-files will be used to compile, set-up, test and use the `BBFMM2D`. The user only needs to change these m-files. No modifications will be needed to the contents of the folder `BBFMM2D` which includes the c++ source code. 
 
 ####Step 2: Compile the mex file
 
 __A.__ Open file `compilemex.m`
 
-__B.__ Determine your kernel expression (line 3) 
+__B.__ Specify your kernel expression (line 3) 
 
 __C.__ Give your BBFMM2D case a name (line 4), e.g. 
 
