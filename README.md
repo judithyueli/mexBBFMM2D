@@ -90,12 +90,17 @@ This example is for a 2D domain of size 100x100. The covariance matrix Q of this
 
 __Testing mode:__
 
+To run the example, simply run: 
+
+```
+callmxFMM2D;
+```
+
+Opem callmxFMM2D.m to inspect the commands. The first part sets up the grid and parameters required by BBFMM2D that will be explained below. The command that runs BBFMM2D is in the last line of the m-file: 
+
 ```
 [QH,QHexact] = case1(xloc, yloc,H,nCheb,print);
 ```
-
-In this mode, the code will multiply `Q` and `H` by both BBFMM2D and by direct multiplication and will compare the computational time for the two methods and give the approximation error of BBFMM2D. This mode is useful when one wants to determine how many Chebyshev nodes to use for a given approximation error and will take a long time because the direct multiplication is also performed. Caution! Do not use for large matrices because direct multiplication will take for ever. 
-
 __Input__: 
 
 `xloc`, `yloc`: These are the coordinates of each grid point. These are mx1 vectors arranged in a consistent order. For example for a 2x2 grid in [0,1] it would be xloc=[0 0 1 1]’ and yloc=[0 1 0 1]’. 
@@ -111,6 +116,9 @@ __Output:__
 `QH`: the product of Q and H as given by BBFMM2D
 
 `QHexact`: the product of Q and H by direct multiplication
+
+In this mode, the code will multiply `Q` and `H` by both BBFMM2D and by direct multiplication and will compare the computational time for the two methods and give the approximation error of BBFMM2D. This mode is useful when one wants to determine how many Chebyshev nodes to use for a given approximation error and will take a long time because the direct multiplication is also performed. Caution! Do not use for large matrices because direct multiplication will take for ever. 
+
 
 
 Example results for `QH` with `nCheb`=4,5,6. Large `nCheb` will give greater accuracy but more time consuming. 
