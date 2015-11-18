@@ -70,11 +70,12 @@ __B.__ Determine your kernel expression (line 3)
 __C.__ Give your BBFMM2D case a name (line 4), e.g. 
 
 ```
-kernel = exp(-sqrt(r^0.5)/30);
+syms r 								% define independent variable as a symbolic variable
+kernel = exp(-sqrt(r^0.5)/30);		% define kernel using symbolic expression (has to be a function of the symbolic variable!)
 outputfile = 'case1';
 ```
 
-Run compilemex.m. The code will compile and will create a function with the name `case1.mexmaci64` (the name will change depending on computer architecture).
+Run `compilemex.m`. The code will compile and will create a function with the name `case1.mexmaci64` (the name will change depending on computer architecture).
 
 NOTE!! This step should be performed every time the kernel Q is changed (because the mex file should be recompiled).
 
