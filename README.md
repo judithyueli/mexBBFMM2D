@@ -38,7 +38,9 @@ Setup MEX by typing the following MATLAB command
       mex -setup  
 ```
 
-To ensure that  MEX is installed, try an example provided by MATLAB:
+If you get an error saying that SDK files are missing (e.g. ... Looking for folder '/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk' ...No.) you can find the sdk files here https://github.com/phracker/MacOSX-SDKs/releases. Download those that are missing and place them in the appropriate directories based on the error message you get. 
+
+Once mex -setup runs successfully, to ensure that  MEX is installed, try an example provided by MATLAB:
 ```
 copyfile([matlabroot,'/extern/examples/mex/arraySize.c'],'./','f')     
 mex -v arraySize.c     
