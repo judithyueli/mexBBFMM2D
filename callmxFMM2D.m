@@ -1,4 +1,4 @@
-QH = callmxFMM2D(Outputname,TestingMode)
+QH = callmxFMM2D(ExecFile,TestingMode)
 
 %% This is an example for using mexBBFMM2D to multiply the covariance matrix for a regular 100 x 100 grid, with matrix H. 
 
@@ -30,9 +30,9 @@ PrintFlag = true;   % print exact computation time and accuracy
 if TestingMode
   %% testing mode 
   % Compute matrix-matrix product QH of dimension 10000x100
-  eval('[QH,QHexact] = ',Outputname,'(xloc, yloc,H,nCheb,PrintFlag);');
+  eval('[QH,QHexact] = ',ExecFile,'(xloc, yloc,H,nCheb,PrintFlag);');
 else
   %% application mode
-  eval('QH = ',Outputname,'(xloc, yloc,H,nCheb,PrintFlag);');
+  eval('QH = ',ExecFile,'(xloc, yloc,H,nCheb,PrintFlag);');
 end
   
