@@ -1,6 +1,6 @@
 %% Example: Q*H
 
-% Info on dimensions
+% Grid information - regular 100x100 grid in [0,1]
 Nx =100; Ny = 100; N = Nx*Ny;
 
 % Store location (x,y) for each grid in a column-wise fashion
@@ -14,10 +14,10 @@ xloc = xloc(:);  yloc = yloc(:);
 %% testing mode 
 H = ones(N,100);    % right muliplier H, each column is a Nx1 vector
 nCheb = 6;          % number of Chebyshev node
-print = true;       % print exact computation time and accuracy
+PrintFlag = true;       % print exact computation time and accuracy
 
 % Compute matrix-matrix product QH of dimension 10000x100
-[QH,QHexact] = case1(xloc, yloc,H,nCheb,print);
+[QH,QHexact] = case1(xloc, yloc,H,nCheb,PrintFlag);
 
 %% application mode
-QH = case1(xloc, yloc,H,nCheb,print);
+QH = case1(xloc, yloc,H,nCheb,PrintFlag);
