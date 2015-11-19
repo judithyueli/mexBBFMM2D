@@ -36,10 +36,8 @@ Setup MEX by typing the following MATLAB command
 ```
       mex -setup  
 ```
-__For Mac:__
-If you get an error saying that SDK files are missing (e.g. ... Looking for folder '/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk' ...No.) you can find the sdk files here https://github.com/phracker/MacOSX-SDKs/releases. Download those that are missing and place them in the appropriate directories based on the error message you get. 
 
-Once mex -setup runs successfully, to ensure that  MEX is installed, try the following commands:
+Once mex is set up successfully, to ensure that  MEX is installed, try the following commands:
 ```
 copyfile([matlabroot,'/extern/examples/mex/arraySize.c'],'./','f')     
 mex -v arraySize.c     
@@ -53,7 +51,7 @@ Dimensions: 5000x5000
 Size of  array in kilobytes: 24414
 ```
 
-If you have trouble with setting up mex, see [here](http://www.mathworks.com/support/sysreq/previous_releases.html)
+If you have trouble with setting up mex, see __Trouble Shooting.md__
 
 ####Step 1b:  Download the code from https://github.com/judithyueli/mexBBFMM2D/archive/master.zip
 
@@ -96,16 +94,15 @@ __Testing mode:__
 To run the example,  run the command: 
 
 ```
-QH = callmxFMM2D(ExecFile,TestingMode);
+QH = callmxFMM2D('case1',TestingMode);
 ```
 
-Input: `ExecFile` is the name of the executable you defined in compilemex.m
-       `TestingMode` is 1 if testing and 0 otherwise.
+Input: 'case1' is the name of the executable you defined in `compilemex.m` and `TestingMode` is 1 if in testing mode and 0 otherwise.
 
 Open `callmxFMM2D.m` to inspect the commands. The first part sets up the grid and other parameters required by BBFMM2D that will be explained in detail below. The command that runs BBFMM2D is: 
 
 ```
-[QH,QHexact] = ExecFile(xloc, yloc,H,nCheb,print);
+[QH,QHexact] = case1(xloc, yloc,H,nCheb,PrintFlag);
 ```
 __Input__: 
 
@@ -139,18 +136,23 @@ Relative Difference = norm (QHfast - QH) / norm(QH)
 
 __Application mode:__ 
 ```
-QH = ExecFile(xloc, yloc,H,nCheb,print);
+QH = case1(xloc, yloc,H,nCheb,print);
 ```
 
 Input: same as in testing mode. Performs the multiplication using BBFMM2D only and can be used for very large cases.
 
 ####Step 4: Run you own example
 
-- Determine your kernel type and compile the mex file  (step 2)
+- Determine your kernel type and compile the mex file with a name of your choice, e.g., `expfun.mex` (step 2)
 - Set up your grid coordinates in two vectors x and y
 - Run mexBBFMM2D in testing mode to determine number of Chebyshev modes
+```
+[QH,QHexact] = expfun(xloc, yloc,H,nCheb,PrintFlag);
+```
 - Run mexBBFMM2D in application mode for your own example.
-
+```
+QH = expfun(xloc, yloc,H,nCheb,PrintFlag);
+```
 
 ### APPENDIX
 
