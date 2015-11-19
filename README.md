@@ -60,8 +60,7 @@ If you have trouble with setting up mex, see [here](http://www.mathworks.com/sup
 A folder called `mexBBFMM2D-master` will be downloaded. Copy the folder `mexBBFMM2D-master` to your specific working directory. In MATLAB, set the current folder to be the directory where the downloaded folder was copied. You will see the folders
 `BBFMM2D\` and `Eigen\`, as well as an m-file called (`compilemex.m`) and an example m-file (`callmxFMM2D.m`) that we will use in this quick start quide. These m-files will be used to compile, set-up, test and use the `BBFMM2D`. The user only needs to change these m-files. No modifications will be needed to the contents of the folder `BBFMM2D` which includes the c++ source code. 
 
-Note: To use BBFMM2D, you need to be within the folder containing BBFMM2D files. 
-__add note about path. Can the user add the folder in the path and operate from a different directory?__
+Note: For Step 2 you have to operate in the main directory of mexBBFMM2D, which contains `make.m`, For Step 3 or 4, you can call the generated mex function files (e.g., `case1.mexmaci64`) by moving them to your own working directory, or add the main directory of mexBBFMM2D to the path.
 
 ####Step 2: Compile the mex file
 
