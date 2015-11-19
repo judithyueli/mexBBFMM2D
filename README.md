@@ -2,10 +2,10 @@
 ==========
 
 ###Function
-Perform fast multiplication of a kernel Q with a vector or matrix, P = QH
+Perform fast (linear) multiplication of a kernel matix Q with a vector or matrix: P = QH
 
 ###Overview
-The Fast Multipole Method is an algorithm that can be used to perform fast multiplication of an N x N dense matrix Q(x,y) where N is the number of unknown values at points (x,y) in a 2D domain, with a matrix H of size N x m (N>>m). The direct multiplication approach has complexity O(N^2), while the BBFMM2D has linear complexity O(N). As an example, for a matrix of size 10,000x10,000 multiplied by 10,000 x 100, the BBFMM2D takes 1.4 seconds, while the direct approach takes 8.1 seconds, on a single processor laptop. The table below shows computation time on a single core CPU.
+The Fast Multipole Method (FMM) is an algorithm that performs fast multiplication of an N x N dense matrix Q(x,y) where N is the number of unknown values at points (x,y) in a 2D domain, with a matrix H of size N x m (N>>m). The direct multiplication approach has complexity O(N^2), while the BBFMM2D has linear complexity O(N). As an example, for a matrix of size 10,000x10,000 multiplied to 10,000 x 100, the BBFMM2D takes 1.4 seconds, while the direct approach takes 8.1 seconds, on a single processor laptop. The table below shows computation time on a single core CPU.
 
 |   N      |  Time in seconds  |     
 | -------: |:-----------------:|   
@@ -58,15 +58,15 @@ If you have trouble with setting up mex, see __Trouble Shooting.md__
 A folder called `mexBBFMM2D-master` will be downloaded. Copy the folder `mexBBFMM2D-master` to your specific working directory. In MATLAB, set the current folder to be the directory where the downloaded folder was copied. You will see the folders
 `BBFMM2D\` and `Eigen\`, as well as an m-file called (`compilemex.m`) and an example m-file (`callmxFMM2D.m`) that we will use in this quick start quide. These m-files will be used to compile, set-up, test and use the `BBFMM2D`. The user only needs to change these m-files. No modifications will be needed to the contents of the folder `BBFMM2D` which includes the c++ source code. 
 
-Note: For Step 2 you have to operate in the main directory of mexBBFMM2D, which contains `make.m`, For Step 3 or 4, you can call the generated mex function files (e.g., `case1.mexmaci64`) by moving them to your own working directory, or add the main directory of mexBBFMM2D to the path.
+Note: For Step 2 you have to operate in the main directory of mexBBFMM2D, which contains `make.m`, For Step 3 or 4, you can call the generated MEX-files (e.g., `case1.mexmaci64`) by moving them to your own working directory, or add the main directory of mexBBFMM2D to the path.
 
-####Step 2: Compile the mex file
+####Step 2: Compile the MEX file
 
 __A.__ Open file `compilemex.m`
 
-__B.__ Specify your kernel expression (line 3) 
+__B.__ Define your kernel function, e.g. `kernel = exp(-sqrt(r^0.5)/30);`
 
-__C.__ Give your BBFMM2D case a name (line 4), e.g. case1
+__C.__ Give your BBFMM2D case a name, e.g. `case1`
 
 ```
 syms r 								% define independent variable as a symbolic variable
@@ -74,20 +74,20 @@ kernel = exp(-sqrt(r^0.5)/30);		% define kernel using symbolic expression (has t
 outputfile = 'case1';
 ```
 
-Run `compilemex.m`. The code will compile and will create a file function with the name you provided for variable outputfile (e.g. `case1.mexmaci64`). The extension will change depending on computer architecture.
+Run `compilemex.m`. It will compile the source code and generate a MEX-file with your provied name (e.g. `case1.mexmaci64`). The extension (`.mexmaci64`) will depend on your platform.
 
 For Windows users: If you get an error about file ammintrin.h missing, follow instructions here: http://www.mathworks.com/matlabcentral/answers/90383-fix-problem-when-mex-cpp-file
 
-NOTE!! The compilation (step 2)  should be performed every time the kernel Q is changed (because the mex file should be recompiled).
+NOTE!! Recompile the MEX-file (step 2) when the kernel function is changed.
 
 ####Step 3: Run example
 
 __Example filename:__ `callmxFMM2D.m`
 
 __Example description:__ 
-This example is for a 2D regular grid of size 100 x 100. The covariance matrix Q of this grid has size 10,000 x 10,000. Running `mexBBFMM2D` will perform the multiplication of `Q` (as defined by the kernel in `compilemex.m`) with a matrix `H` given by ones(10000,100). 
+This example is for a 2D regular grid of size 100 x 100. The covariance matrix Q of this grid has size 10,000 x 10,000. `mexBBFMM2D` will perform fast multiplication of `Q` (the (i,j)-th entry of Q is kernel(xi, xj)) with a matrix `H` given by ones(10000,100). 
 
-`mexBBFMM2D` can be run in two modes, a testing mode and an application mode. 
+`mexBBFMM2D` has two modes, a testing mode and an application mode. 
 
 __Testing mode:__
 
@@ -106,33 +106,33 @@ Open `callmxFMM2D.m` to inspect the commands. The first part sets up the grid an
 ```
 __Input__: 
 
-`xloc`, `yloc`: These are the coordinates of each grid point provided as vectors. These are m x 1 vectors arranged in a consistent order. For example for a 2x2 grid in [0,1] it would be xloc=[0 0 1 1]’ and yloc=[0 1 0 1]’. The grid does not have to be regular or structured. 
+`xloc`, `yloc`: These are the x and y coordinates of grid points, respectively. [xloc(i), yloc(i)] gives the location of the i-th point. For example for a 2x2 grid in [0,1] it would be xloc=[0 0 1 1]’ and yloc=[0 1 0 1]’. The grid does not have to be regular or structured. 
 
-`H`: the matrix we want to multiply Q with (multiply Q with H)
+`H`: the matrix we want to multiply Q with (QH)
 
-`nCheb`: number of Chebyshev nodes (the higher nCheb, the higher the accuracy, but higher the computational cost), integers between `4` to `6` are suggested. Try starting with `4` and increase to achieve desirable accuracy.
+`nCheb`: number of Chebyshev nodes per dimension (_larger_ nCheb gives _higher_ accuracy, but _higher_ computational cost), integers between `4` and `6` are suggested. Try starting with `4` and increase to achieve desirable accuracy.
 
-`PrintFlag`: flag for printing the output details
+`PrintFlag`: flag for printing the output details: 1 for print, and 0 for no print.
 
 __Output:__ 
 
 `QH`: the product of Q and H as given by BBFMM2D
 
-`QHexact`: the product of Q and H by direct multiplication
+`QHexact`: the product of Q and H by direct computation
 
-In this mode, the code will multiply `Q` and `H` by both BBFMM2D and by direct multiplication and will compare the computational time for the two methods and give the approximation error of BBFMM2D. This mode is useful when one wants to determine how many Chebyshev nodes to use for a given approximation error and will take a long time because the direct multiplication is also performed. Caution! Do not use for large matrices because direct multiplication will take for ever. 
+In this mode, the code multiplies Q and H with both fast (BBFMM2D) and direct method. It outputs the runnting time for each method as well as the relative error. This mode is useful when one wants to determine how many Chebyshev nodes (nCheb) to use for a desired accuracy. It will take a long time because the direct multiplication is also performed. Caution! Do not use for large matrices because direct multiplication will take for ever. 
 
 
 
 Example results for `QH` with `nCheb`=4,5,6. Large `nCheb` will give greater accuracy but more time consuming. 
 
-|   nCheb       | Rel Difference          |  Time(s) with BBFMM2D  | Time(s) with direct multiplication|     
+|   nCheb       | Relative Error          |  Time(s) with BBFMM2D  | Time(s) with direct multiplication|     
 | ------------: |:-----------------:|:----------------------:|:---------------------------------:|
 | 4  		|        4.45E-08   |                   0.67s|                            8.01s|
 | 5  		|       1.66E-09    |                   0.85s|                            8.06s|
 | 6  		|      3.20E-10     |                   1.44s|                            8.34s|
 
-Relative Difference = norm (QHfast - QH) / norm(QH)
+Relative error = norm (QHfast - QH) / norm(QH)
 
 __Application mode:__ 
 ```
@@ -145,7 +145,7 @@ Input: same as in testing mode. Performs the multiplication using BBFMM2D only a
 
 - Determine your kernel type and compile the mex file with a name of your choice, e.g., `expfun.mex` (step 2)
 - Set up your grid coordinates in two vectors x and y
-- Run mexBBFMM2D in testing mode to determine number of Chebyshev modes
+- Run mexBBFMM2D in testing mode to determine number of Chebyshev nodes
 ```
 [QH,QHexact] = expfun(xloc, yloc,H,nCheb,PrintFlag);
 ```
