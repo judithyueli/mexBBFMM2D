@@ -94,10 +94,9 @@ __Testing mode:__
 To run the example,  run the command: 
 
 ```
-QH = callmxFMM2D('case1',TestingMode);
+callmxFMM2D
 ```
 
-Input: 'case1' is the name of the executable you defined in `compilemex.m` and `TestingMode` is 1 if in testing mode and 0 otherwise.
 
 Open `callmxFMM2D.m` to inspect the commands. The first part sets up the grid and other parameters required by BBFMM2D that will be explained in detail below. The command that runs BBFMM2D is: 
 
