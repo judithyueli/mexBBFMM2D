@@ -82,7 +82,7 @@ NOTE!! Recompile the MEX-file (step 2) when the kernel function is changed.
 
 ####Step 3: Run example
 
-__Example filename:__ `callmxFMM2D.m`
+__Example filename:__ `example.m`
 
 __Example description:__ 
 This example is for a 2D regular grid of size 100 x 100. The covariance matrix Q of this grid has size 10,000 x 10,000. `mexBBFMM2D` will perform fast multiplication of `Q` (the (i,j)-th entry of Q is kernel(xi, xj)) with a matrix `H` given by ones(10000,100). 
@@ -94,11 +94,11 @@ __Testing mode:__
 To run the example,  run the command: 
 
 ```
-callmxFMM2D
+example
 ```
 
 
-Open `callmxFMM2D.m` to inspect the commands. The first part sets up the grid and other parameters required by BBFMM2D that will be explained in detail below. The command that runs BBFMM2D is: 
+Open `example.m` to inspect the commands. The first part sets up the grid and other parameters required by BBFMM2D that will be explained in detail below. The command that runs BBFMM2D is: 
 
 ```
 [QH,QHexact] = case1(xloc, yloc,H,nCheb,PrintFlag);
