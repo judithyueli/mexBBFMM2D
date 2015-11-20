@@ -39,4 +39,6 @@ eigenDIR = 'eigen/';
 fmmDIR = 'BBFMM2D/header/';
 mex('-O','mexFMM2D.cpp',src1,src2,src3,'-largeArrayDims',['-I',eigenDIR],['-I',fmmDIR],'-output',filename)
 disp('mex compiling is successful!')
+fprintf('a MEX function %s.mex is generated\n',filename);
+fprintf('Calling sequence is\n\tQH = %s(xloc,yloc,H,nCheb,PrintFlag); or\n\t[QH QHexact] = %s(xloc,yloc,H,nCheb,PrintFlag);\n',filename,filename)
 end

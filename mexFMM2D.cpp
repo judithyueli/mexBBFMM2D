@@ -36,7 +36,8 @@ void read_location(const mxArray* x, const mxArray* y, vector<Point>& location){
     }
 }
 
-void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
+void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) 
+{
     // Macros for the output and input arguments
     #define QH_OUT          plhs[0]
     #define QHexact_OUT     plhs[1]
@@ -48,11 +49,14 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 
     unsigned long N;
     unsigned m;
+    // Instruction
+    char errmsg[1023 + 1];
+    sprintf(errmsg,"Calling sequence is\n\tQH = %s(xloc,yloc,H,nCheb,PrintFlag); or\n\t[QH QHexact] = %s(xloc,yloc,H,nCheb,PrintFlag);\n", mexFunctionName(), mexFunctionName());
     
     // Argument Checking:
-
     // Check number of argument
     if(nrhs != 5) {
+        mexPrintf(errmsg);
         mexErrMsgTxt("Wrong number of input arguments");
     }else if(nlhs > 2){
         mexErrMsgTxt("Too many output arguments");
@@ -147,6 +151,7 @@ void mexFunction(int nlhs,mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     if(print){    
         mexPrintf("The relative difference is: %13.6E \n", relativeError);
     }
+
     } 
 
     return;
