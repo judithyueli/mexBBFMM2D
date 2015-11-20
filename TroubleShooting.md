@@ -2,8 +2,9 @@
 ==========
 ####__mexBBFMM2D__ has been tested on the following platform:
 
-OS X Yosemite (10.10.5) with MATLAB R2015b
-Windows 7 with MATLAB R2014b
+- OS X Yosemite (10.10.5) with MATLAB R2015b
+- Windows 7 with MATLAB R2014b
+
 Report any additional issues to yuel@stanford.edu if the error you've got is not covered in this trouble shooting guide.
 
 ####How do I find the correct C++ compiler?
