@@ -15,13 +15,15 @@ ckernel = ccode(kernel);
 
 % Pass the Kernel to kernelfun.hpp
 fid = fopen('kernelfun.hpp','w+');
+fprintf(fid,'#include "matrix.h"\n');
 fprintf(fid,'class myKernel: public kernel_Base {\n');
 fprintf(fid,'public:\n');
 fprintf(fid,'    virtual double kernel_Func(Point r0, Point r1){\n');
 fprintf(fid,'        double %s =  sqrt((r0.x-r1.x)*(r0.x-r1.x) + (r0.y-r1.y)*(r0.y-r1.y));\n',var);
 fprintf(fid,'        double t0;         //implement your own kernel on the next line\n');
 fprintf(fid,'        %s\n',ckernel);
-fprintf(fid,'        if (isinf(t0)|| isnan(t0))\n');
+% fprintf(fid,'        if (isinf(t0)|| isnan(t0))\n');
+fprintf(fid,'        if (mxIsInf(t0)||mxIsNaN(t0))\n');
 fprintf(fid,'           return 0;\n');
 fprintf(fid,'        else\n');
 fprintf(fid,'        return t0;\n');
