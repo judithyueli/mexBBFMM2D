@@ -9,7 +9,9 @@ Report any additional issues to yuel@stanford.edu if the error you've got is not
 
 ####How do I find the correct C++ compiler?
 
-See [here](http://www.mathworks.com/support/sysreq/previous_releases.html)
+See [here](http://www.mathworks.com/support/sysreq/previous_releases.html) for a list of supported C++ compiler for different MATLAB version
+
+__Microsoft Windows SDK 7.1__ is a free compiler supported by most MATLAB version and across platform. If you have trouble installing SDK 7.1, or have trouble running it see [here](http://www.mathworks.com/matlabcentral/answers/95039-why-does-the-sdk-7-1-installation-fail-with-an-installation-failed-message-on-my-windows-system)
 
 #### __For Mac:__ If you get an error saying that SDK files are missing, e.g.,  
 
