@@ -56,7 +56,7 @@ If you have trouble with setting up mex, see __Trouble Shooting.md__
 ####Step 1b:  Download the code from https://github.com/judithyueli/mexBBFMM2D/archive/master.zip
 
 A folder called `mexBBFMM2D-master` will be downloaded. Copy the folder `mexBBFMM2D-master` to your specific working directory. In MATLAB, set the current folder to be the directory where the downloaded folder was copied. You will see the folders
-`BBFMM2D\` and `Eigen\`, as well as an m-file called (`compilemex.m`) and an example m-file (`callmxFMM2D.m`) that we will use in this quick start quide. These m-files will be used to compile, set-up, test and use the `BBFMM2D`. The user only needs to change these m-files. No modifications will be needed to the contents of the folder `BBFMM2D` which includes the c++ source code. 
+`BBFMM2D\` and `Eigen\`, as well as an m-file called (`compilemex.m`) and an example m-file (`example_case1.m`) that we will use in this quick start quide. These m-files will be used to compile, set-up, test and use the `BBFMM2D`. The user only needs to change these m-files. No modifications will be needed to the contents of the folder `BBFMM2D` which includes the c++ source code. 
 
 Note: For Step 2 you have to operate in the main directory of mexBBFMM2D, which contains `make.m`, For Step 3 or 4, you can call the generated MEX-files (e.g., `case1.mexmaci64`) by moving them to your own working directory, or add the main directory of mexBBFMM2D to the path.
 
@@ -82,7 +82,7 @@ NOTE!! Recompile the MEX-file (step 2) when the kernel function is changed.
 
 ####Step 3: Run example
 
-__Example filename:__ `example.m`
+__Example filename:__ `example_case1.m`
 
 __Example description:__ 
 This example is for a 2D regular grid of size 100 x 100. The covariance matrix Q of this grid has size 10,000 x 10,000. `mexBBFMM2D` will perform fast multiplication of `Q` (the (i,j)-th entry of Q is kernel(xi, xj)) with a matrix `H` given by ones(10000,100). 
@@ -94,11 +94,11 @@ __Testing mode:__
 To run the example,  run the command: 
 
 ```
-example
+example_case1
 ```
 
 
-Open `example.m` to inspect the commands. The first part sets up the grid and other parameters required by BBFMM2D that will be explained in detail below. The command that runs BBFMM2D is: 
+Open `example_case1.m` to inspect the commands. The first part sets up the grid and other parameters required by BBFMM2D that will be explained in detail below. The command that runs BBFMM2D is: 
 
 ```
 [QH,QHexact] = case1(xloc, yloc,H,nCheb,PrintFlag);
@@ -143,7 +143,8 @@ Input: same as in testing mode. Performs the multiplication using BBFMM2D only a
 ####Step 4: Run you own example
 
 - Determine your kernel type and compile the mex file with a name of your choice, e.g., `expfun.mex` (step 2)
-- Set up your grid coordinates in two vectors x and y
+- Add `expfun.mex` to your path, or move it to your current directory
+- Set up your grid coordinates in two vectors `locx` and `locy` and the right multiplier `H` (see `example_case1.m`)
 - Run mexBBFMM2D in testing mode to determine number of Chebyshev nodes
 ```
 [QH,QHexact] = expfun(xloc, yloc,H,nCheb,PrintFlag);
