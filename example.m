@@ -1,5 +1,5 @@
-function callmxFMM2D
-% This is an example for using mexBBFMM2D to multiply the covariance matrix for a regular 100 x 100 grid, with matrix H. 
+% This is an example file for using mexBBFMM2D to multiply the covariance matrix
+% for a regular 100 x 100 grid, with matrix H. 
 
 %Usage
 %[QH,QHexact] = case1(xloc, yloc,H,nCheb,PrintFlag);']);
@@ -8,11 +8,13 @@ function callmxFMM2D
 % Grid information - regular 100x100 grid in [0,1]
 % xloc, yloc: These are the coordinates of each grid point provided as vectors. 
 %             These are m x 1 vectors arranged in a consistent order. 
-%             For example for a 2x2 grid in [0,1] it would be xloc=[0 0 1 1]' and yloc=[0 1 0 1]'. 
+%             For example for a 2x2 grid in [0,1] it would be xloc=[0 0 1 1]' 
+%             and yloc=[0 1 0 1]'. 
 %             The grid does not have to be regular or structured.
 % H: the matrix we want to multiply Q with (multiply Q with H)
-% nCheb: number of Chebyshev nodes (the higher nCheb, the higher the accuracy, but higher the computational cost), 
-%         integers between 4 to 6 are suggested. Try starting with 4 and increase to achieve desirable accuracy.
+% nCheb: number of Chebyshev nodes (the higher nCheb, the higher the accuracy,
+%        but higher the computational cost), integers between 4 to 6 are suggested.
+%        Try starting with 4 and increase to achieve desirable accuracy.
 % PrintFlag: flag for printing the output details
 
 % Output: product QH with BBFMM2D (application mode) 
@@ -44,6 +46,4 @@ if TestingMode
 else
   %% application mode
   QH = case1(xloc, yloc,H,nCheb,PrintFlag);
-end
-
 end
