@@ -20,7 +20,7 @@ BBFMM2D performs the multiplication by an approximation that relies on Chebyshev
 
 This is a quick-start guide with instructions on how to set up and use mexBBFMM2D in MATLAB, with an example m-file that can be used to perform matrix-vector and matrix-matrix multiplication. A reasonably good knowledge of MATLAB is assumed and minimal understanding of the FMM theory is needed.  
 
-For a more involved description of the code and the method please see [here](https://github.com/sivaramambikasaran/BBFMM2D), and for a full description of the algorithm see [Fong and Darve 2006] in section __Reference__.
+For a more involved description of the code and the method please see [here](https://github.com/sivaramambikasaran/BBFMM2D), and for a full description of the algorithm see [Fong and Darve 2006] in section [__Reference__](#ref).
 
 In this guide, we will use the example of the multiplication of a Gaussian covariance matrix Q (termed as Gaussian kernel) with a matrix H. The method can also be applied for other smooth kernels (see section __Appendix__).
 
@@ -192,7 +192,7 @@ __Kernel Options__
 
 2. [BBFMM2D](https://github.com/sivaramambikasaran/BBFMM2D)
 
-#### Reference:
+#### Reference:<a name="ref"></a>
 1. Sivaram Ambikasaran, Judith Yue Li, Peter K. Kitanidis, Eric Darve, Large-scale stochastic linear inversion using hierarchical matrices, Computational Geosciences, December 2013, Volume 17, Issue 6, pp 913-927 [link](http://link.springer.com/article/10.1007%2Fs10596-013-9364-0)
 2. Judith Yue Li, Sivaram Ambikasaran, Eric F. Darve, Peter K. Kitanidis, A Kalman filter powered by H2-matrices for quasi-continuous data assimilation problems [link](https://www.dropbox.com/s/xxjdvixq7py4bhp/HiKF.pdf)
 3. Saibaba, A., S. Ambikasaran, J. Li, P. Kitanidis, and E. Darve (2012), Application of hierarchical matrices to linear inverse problems in geostatistics, OGST Revue d’IFP Energies Nouvelles, 67(5), 857–875, doi:http://dx.doi.org/10.2516/ogst/2012064. [link](http://ogst.ifpenergiesnouvelles.fr/articles/ogst/abs/2012/05/ogst120061/ogst120061.html)
