@@ -82,14 +82,16 @@ NOTE!! Recompile the MEX-file (step 2) when the kernel function is changed.
 
 ####Step 3: Run example
 
-__Example filename:__ `example_case1.m`
-
 __Example description:__ 
 This example is for a 2D regular grid of size 100 x 100. The covariance matrix Q of this grid has size 10,000 x 10,000. `mexBBFMM2D` will perform fast multiplication of `Q` (the (i,j)-th entry of Q is kernel(xi, xj)) with a matrix `H` given by ones(10000,100). 
 
-`mexBBFMM2D` has two modes, a testing mode and an application mode. 
+Open `example_case1.m` to inspect the commands. The first part sets up the grid and other parameters required by mexBBFMM2D that will be explained in detail below. 
 
-__Testing mode:__
+Change the `ExecName` to the name you used in compilemex for your executable. 
+
+Then, choose whether you want to run mexBBFMM2D in Testing Mode or in Execution mode. In __Testing Mode__, the code multiplies Q and H with both fast (BBFMM2D) and direct method. It outputs the runnting time for each method as well as the relative error. This mode is useful when one wants to determine how many Chebyshev nodes (nCheb) to use for a desired accuracy. It will take a long time because the direct multiplication is also performed. Caution! Do not use for large matrices because direct multiplication will take for ever. In __Application Mode__, the code uses BBFMM2D only and does not compare with the direct approach. This mode should be used for large problems.
+
+The rest of the example defines the grid information, the H matrix and number of Chebyshev nodes, as well as a PrintFlag which can be set to false for limited printout. 
 
 To run the example,  run the command: 
 
@@ -97,11 +99,10 @@ To run the example,  run the command:
 example_case1
 ```
 
-
-Open `example_case1.m` to inspect the commands. The first part sets up the grid and other parameters required by BBFMM2D that will be explained in detail below. The command that runs BBFMM2D is: 
+The mfile that runs BBFMM2D is runmexBBFMM2D.m and no changes are needed in this m-file. Everything is defined in the example_case1.m
 
 ```
-[QH,QHexact] = case1(xloc, yloc,H,nCheb,PrintFlag);
+QH = runmexBBFMM2D(xloc, yloc,H,nCheb,PrintFlag,ExecName,TestingMode);
 ```
 __Input__: 
 
@@ -117,11 +118,6 @@ __Output:__
 
 `QH`: the product of Q and H as given by BBFMM2D
 
-`QHexact`: the product of Q and H by direct computation
-
-In this mode, the code multiplies Q and H with both fast (BBFMM2D) and direct method. It outputs the runnting time for each method as well as the relative error. This mode is useful when one wants to determine how many Chebyshev nodes (nCheb) to use for a desired accuracy. It will take a long time because the direct multiplication is also performed. Caution! Do not use for large matrices because direct multiplication will take for ever. 
-
-
 
 Example results for `QH` with `nCheb`=4,5,6. Large `nCheb` will give greater accuracy but more time consuming. 
 
@@ -133,12 +129,6 @@ Example results for `QH` with `nCheb`=4,5,6. Large `nCheb` will give greater acc
 
 Relative error = norm (QHfast - QH) / norm(QH)
 
-__Application mode:__ 
-```
-QH = case1(xloc, yloc,H,nCheb,print);
-```
-
-Input: same as in testing mode. Performs the multiplication using BBFMM2D only and can be used for very large cases.
 
 ####Step 4: Run you own example
 
@@ -147,11 +137,13 @@ Input: same as in testing mode. Performs the multiplication using BBFMM2D only a
 - Set up your grid coordinates in two vectors `locx` and `locy` and the right multiplier `H` (see `example_case1.m`)
 - Run mexBBFMM2D in testing mode to determine number of Chebyshev nodes
 ```
-[QH,QHexact] = expfun(xloc, yloc,H,nCheb,PrintFlag);
+TestingMode = true; 
+QH = runmexBBFMM2D(xloc, yloc,H,nCheb,PrintFlag,ExecName,TestingMode);
 ```
 - Run mexBBFMM2D in application mode for your own example.
 ```
-QH = expfun(xloc, yloc,H,nCheb,PrintFlag);
+TestingMode = false; 
+QH = runmexBBFMM2D(xloc, yloc,H,nCheb,PrintFlag,ExecName,TestingMode);
 ```
 
 ### APPENDIX<a name="ref_app"></a>
