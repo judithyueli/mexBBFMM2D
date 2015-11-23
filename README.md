@@ -22,7 +22,7 @@ This is a quick-start guide with instructions on how to set up and use mexBBFMM2
 
 For a more involved description of the code and the method please see [here](https://github.com/sivaramambikasaran/BBFMM2D), and for a full description of the algorithm see [Fong and Darve 2006] in section [__Reference__](#ref).
 
-In this guide, we will use the example of the multiplication of a Gaussian covariance matrix Q (termed as Gaussian kernel) with a matrix H. The method can also be applied for other smooth kernels (see section __Appendix__).
+In this guide, we will use the example of the multiplication of a Gaussian covariance matrix Q (termed as Gaussian kernel) with a matrix H. The method can also be applied for other smooth kernels (see section [__Appendix__](#ref_app)).
 
 ###Quick start guide
 
@@ -154,7 +154,7 @@ Input: same as in testing mode. Performs the multiplication using BBFMM2D only a
 QH = expfun(xloc, yloc,H,nCheb,PrintFlag);
 ```
 
-### APPENDIX
+### APPENDIX<a name="ref_app"></a>
 
 __Kernel Options__
 
