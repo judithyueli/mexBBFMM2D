@@ -76,8 +76,6 @@ outputfile = 'case1';
 
 Run `compilemex.m`. It will compile the source code and generate a MEX-file with your provied name (e.g. `case1.mexmaci64`). The extension (`.mexmaci64`) will depend on your platform.
 
-For Windows users: If you get an error about file ammintrin.h missing, follow instructions here: http://www.mathworks.com/matlabcentral/answers/90383-fix-problem-when-mex-cpp-file
-
 NOTE!! Recompile the MEX-file (step 2) when the kernel function is changed.
 
 ####Step 3: Run example
@@ -138,11 +136,13 @@ Relative error = norm (QHfast - QH) / norm(QH)
 - Run mexBBFMM2D in testing mode to determine number of Chebyshev nodes
 ```
 TestingMode = true; 
+ExecName = 'expfun'; 
 QH = runmexBBFMM2D(xloc, yloc,H,nCheb,PrintFlag,ExecName,TestingMode);
 ```
 - Run mexBBFMM2D in application mode for your own example.
 ```
 TestingMode = false; 
+ExecName = 'expfun'; 
 QH = runmexBBFMM2D(xloc, yloc,H,nCheb,PrintFlag,ExecName,TestingMode);
 ```
 
