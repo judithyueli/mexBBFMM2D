@@ -37,7 +37,7 @@ Setup MEX by typing the following MATLAB command
       mex -setup  
 ```
 
-Attention Mac users: If you have upgraded to Xcode 7, see [Answer]*=(http://www.mathworks.com/matlabcentral/answers/246507-why-can-t-mex-find-a-supported-compiler-in-matlab-r2015b-after-i-upgraded-to-xcode-7-0) by MathWorks Support Team on 28 Dec 2015.
+Attention Mac users: If you have upgraded to Xcode 7, see [Answer](http://www.mathworks.com/matlabcentral/answers/246507-why-can-t-mex-find-a-supported-compiler-in-matlab-r2015b-after-i-upgraded-to-xcode-7-0) by MathWorks Support Team on 28 Dec 2015.
 
 Once mex is set up successfully, to ensure that  MEX is installed, try the following commands:
 ```
