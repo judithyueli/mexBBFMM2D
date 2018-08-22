@@ -1,10 +1,10 @@
-##Quick Start Guide for mexBBFMM2D, a MATLAB interface for Black Box Fast Multipole Method (BBFMM2D)  
+## Quick Start Guide for mexBBFMM2D, a MATLAB interface for Black Box Fast Multipole Method (BBFMM2D)  
 ==========
 
-###Function
+### Function
 Perform fast (linear) multiplication of a kernel matix Q with a vector or matrix: P = QH
 
-###Overview
+### Overview
 The Fast Multipole Method (FMM) is an algorithm that performs fast multiplication of an N x N dense matrix Q(x,y) where N is the number of unknown values at points (x,y) in a 2D domain, with a matrix H of size N x m (N>>m). The direct multiplication approach has complexity O(N^2), while the BBFMM2D has linear complexity O(N). As an example, for a matrix of size 10,000x10,000 multiplied to 10,000 x 100, the BBFMM2D takes 1.4 seconds, while the direct approach takes 8.1 seconds, on a single processor laptop. The table below shows computation time on a single core CPU.
 
 |   N      |  Time in seconds  |     
@@ -16,7 +16,7 @@ The Fast Multipole Method (FMM) is an algorithm that performs fast multiplicatio
 BBFMM2D performs the multiplication by an approximation that relies on Chebyshev interpolation. For details about the method please see Fong and Darve, 2009. The method has an approximation error that can be controlled by input parameters, which can be adjusted depending on the accuracy required.  The package BBFMM2D is written in C++ (https://github.com/sivaramambikasaran/BBFMM2D). mexBBFMM2D provides a MATLAB interface for the package BBFMM2D.
 
 
-###Disclaimer
+### Disclaimer
 
 This is a quick-start guide with instructions on how to set up and use mexBBFMM2D in MATLAB, with an example m-file that can be used to perform matrix-vector and matrix-matrix multiplication. A reasonably good knowledge of MATLAB is assumed and minimal understanding of the FMM theory is needed.  
 
@@ -24,11 +24,11 @@ For a more involved description of the code and the method please see [here](htt
 
 In this guide, we will use the example of the multiplication of a Gaussian covariance matrix Q (termed as Gaussian kernel) with a matrix H. The method can also be applied for other smooth kernels (see section [__Appendix__](#ref_app)).
 
-###Quick start guide
+### Quick start guide
 
-####Step 1:  Download the code and supporting software
+#### Step 1:  Download the code and supporting software
 
-####Step 1a:  Check if you have MEX and MATLAB Symbolic Math Toolbox set up in Matlab
+#### Step 1a:  Check if you have MEX and MATLAB Symbolic Math Toolbox set up in Matlab
 
 This package relies on MATLAB MEX functions and MATLAB Symbolic Math Toolbox. In order to use MEX functions, you should setup mex.
 
@@ -55,14 +55,14 @@ Size of  array in kilobytes: 24414
 
 If you have trouble with setting up mex, see __Trouble Shooting.md__
 
-####Step 1b:  Download the code from https://github.com/judithyueli/mexBBFMM2D/archive/master.zip
+#### Step 1b:  Download the code from https://github.com/judithyueli/mexBBFMM2D/archive/master.zip
 
 A folder called `mexBBFMM2D-master` will be downloaded. Copy the folder `mexBBFMM2D-master` to your specific working directory. In MATLAB, set the current folder to be the directory where the downloaded folder was copied. You will see the folders
 `BBFMM2D\` and `Eigen\`, as well as an m-file called (`compilemex.m`) and an example m-file (`example_case1.m`) that we will use in this quick start quide. These m-files will be used to compile, set-up, test and use the `BBFMM2D`. The user only needs to change these m-files. No modifications will be needed to the contents of the folder `BBFMM2D` which includes the c++ source code. 
 
 Note: For Step 2 you have to operate in the main directory of mexBBFMM2D, which contains `make.m`, For Step 3 or 4, you can call the generated MEX-files (e.g., `case1.mexmaci64`) by moving them to your own working directory, or add the main directory of mexBBFMM2D to the path.
 
-####Step 2: Compile the MEX file
+#### Step 2: Compile the MEX file
 
 __A.__ Open file `compilemex.m`
 
@@ -80,7 +80,7 @@ Run `compilemex.m`. It will compile the source code and generate a MEX-file with
 
 NOTE!! Recompile the MEX-file (step 2) when the kernel function is changed.
 
-####Step 3: Run example
+#### Step 3: Run example
 
 __Example description:__ 
 This example is for a 2D regular grid of size 100 x 100. The covariance matrix Q of this grid has size 10,000 x 10,000. `mexBBFMM2D` will perform fast multiplication of `Q` (the (i,j)-th entry of Q is kernel(xi, xj)) with a matrix `H` given by ones(10000,100). 
@@ -130,7 +130,7 @@ Example results for `QH` with `nCheb`=4,5,6. Large `nCheb` will give greater acc
 Relative error = norm (QHfast - QH) / norm(QH)
 
 
-####Step 4: Run you own example
+#### Step 4: Run you own example
 
 - Determine your kernel type and compile the mex file with a name of your choice, e.g., `expfun.mex` (step 2)
 - Add `expfun.mex` to your path, or move it to your current directory
